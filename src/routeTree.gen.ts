@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ShadesOpticalRouteImport } from './routes/shades-optical'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoctorsRoute = DoctorsRouteImport.update({
@@ -44,6 +50,7 @@ const ShadesOpticalRoute = ShadesOpticalRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
@@ -59,21 +67,31 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/doctors' | '/services' | '/shades-optical'
+  fullPaths:
+    '/' | '/about' | '/contact' | '/doctors' | '/services' | '/shades-optical'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/doctors' | '/services' | '/shades-optical'
-  id: '__root__' | '/' | '/about' | '/doctors' | '/services' | '/shades-optical'
+  to: '/' | '/about' | '/contact' | '/doctors' | '/services' | '/shades-optical'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/doctors'
+    | '/services'
+    | '/shades-optical'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
   DoctorsRoute: typeof DoctorsRoute
   ServicesRoute: typeof ServicesRoute
   ShadesOpticalRoute: typeof ShadesOpticalRoute
@@ -93,6 +111,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/doctors': {
@@ -122,6 +147,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
   DoctorsRoute: DoctorsRoute,
   ServicesRoute: ServicesRoute,
   ShadesOpticalRoute: ShadesOpticalRoute,

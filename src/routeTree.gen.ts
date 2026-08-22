@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DoctorsRouteImport } from './routes/doctors'
+import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ShadesOpticalRouteImport } from './routes/shades-optical'
+import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -36,6 +38,11 @@ const DoctorsRoute = DoctorsRouteImport.update({
   path: '/doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReviewsRoute = ReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -46,22 +53,31 @@ const ShadesOpticalRoute = ShadesOpticalRouteImport.update({
   path: '/shades-optical',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ServicesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
-  '/services': typeof ServicesRoute
+  '/reviews': typeof ReviewsRoute
+  '/services': typeof ServicesRouteWithChildren
   '/shades-optical': typeof ShadesOpticalRoute
+  '/services/$slug': typeof ServicesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
-  '/services': typeof ServicesRoute
+  '/reviews': typeof ReviewsRoute
+  '/services': typeof ServicesRouteWithChildren
   '/shades-optical': typeof ShadesOpticalRoute
+  '/services/$slug': typeof ServicesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,23 +85,42 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
-  '/services': typeof ServicesRoute
+  '/reviews': typeof ReviewsRoute
+  '/services': typeof ServicesRouteWithChildren
   '/shades-optical': typeof ShadesOpticalRoute
+  '/services/$slug': typeof ServicesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/about' | '/contact' | '/doctors' | '/services' | '/shades-optical'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/doctors'
+    | '/reviews'
+    | '/services'
+    | '/shades-optical'
+    | '/services/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact' | '/doctors' | '/services' | '/shades-optical'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/doctors'
+    | '/reviews'
+    | '/services'
+    | '/shades-optical'
+    | '/services/$slug'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
     | '/doctors'
+    | '/reviews'
     | '/services'
     | '/shades-optical'
+    | '/services/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,7 +128,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   DoctorsRoute: typeof DoctorsRoute
-  ServicesRoute: typeof ServicesRoute
+  ReviewsRoute: typeof ReviewsRoute
+  ServicesRoute: typeof ServicesRouteWithChildren
   ShadesOpticalRoute: typeof ShadesOpticalRoute
 }
 
@@ -127,6 +163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reviews': {
+      id: '/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -141,15 +184,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShadesOpticalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/$slug': {
+      id: '/services/$slug'
+      path: '/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof ServicesRoute
+    }
   }
 }
+
+interface ServicesRouteChildren {
+  ServicesSlugRoute: typeof ServicesSlugRoute
+}
+
+const ServicesRouteChildren: ServicesRouteChildren = {
+  ServicesSlugRoute: ServicesSlugRoute,
+}
+
+const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
+  ServicesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   DoctorsRoute: DoctorsRoute,
-  ServicesRoute: ServicesRoute,
+  ReviewsRoute: ReviewsRoute,
+  ServicesRoute: ServicesRouteWithChildren,
   ShadesOpticalRoute: ShadesOpticalRoute,
 }
 export const routeTree = rootRouteImport

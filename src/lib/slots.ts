@@ -36,3 +36,13 @@ export function nowMinutes(): number {
   const d = new Date();
   return d.getHours() * 60 + d.getMinutes();
 }
+
+/** "2026-08-23" + 1 -> "2026-08-24" */
+export function addDaysIso(iso: string, days: number): string {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = (d.getMonth() + 1).toString().padStart(2, "0");
+  const day = d.getDate().toString().padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}

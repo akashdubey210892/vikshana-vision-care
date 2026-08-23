@@ -9,12 +9,28 @@ import { Textarea } from "../components/ui/textarea";
 import { PageHero } from "../components/site-components";
 import { appointmentWhatsAppLink, contact, directionsUrl, doctors, getDoctor, mapEmbed } from "../lib/site-data";
 import { db } from "../lib/firebase";
-import { allDaySlots, formatSlotLabel, nowMinutes, todayIso } from "../lib/slots";
+import { addDaysIso, allDaySlots, formatSlotLabel, nowMinutes, todayIso } from "../lib/slots";
+
+const MAX_LOOKAHEAD_DAYS = 14;
+
+async function dateHasOpenSlot(dateIso: string, doctorKey: string, isTodayDate: boolean): Promise<boolean> {
+  const snap = await getDocs(collection(db, "slots", dateIso, "doctors", doctorKey, "booked"));
+  const booked = new Set(snap.docs.map((d) => d.id));
+  const nowMins = nowMinutes();
+  return allDaySlots().some((time) => {
+    if (booked.has(time)) return false;
+    if (isTodayDate) {
+      const mins = Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
+      if (mins <= nowMins) return false;
+    }
+    return true;
+  });
+}
 
 const schema = z.object({
-  name: z.string().trim().min(2, "Please enter your full name").max(100),
-  phone: z.string().trim().regex(/^[0-9+ ()-]{7,20}$/, "Enter a valid phone number"),
-  email: z.string().trim().email("Enter a valid email").max(255),
+  name: z.string().trim().min(2, "Please enter your full name").max(100).regex(/^[A-Za-z][A-Za-z .'-]*$/, "Name should contain letters only"),
+  phone: z.string().trim().regex(/^[0-9]{10}$/, "Enter a valid 10-digit mobile number"),
+  email: z.string().trim().email("Enter a valid email address").max(255),
   service: z.string().trim().min(2, "Tell us the reason for your visit").max(120),
   message: z.string().trim().max(600),
 });
@@ -56,10 +72,46 @@ function Contact() {
   useEffect(() => { setDoctorKey(preselectedDoctor); }, [preselectedDoctor]);
 
   const [date, setDate] = useState(todayIso());
+  const [minDate, setMinDate] = useState(todayIso());
+  const [findingDate, setFindingDate] = useState(true);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookedTimes, setBookedTimes] = useState<Set<string>>(new Set());
   const [loadingSlots, setLoadingSlots] = useState(true);
   const [slotsBlocked, setSlotsBlocked] = useState(false);
+
+  // Pick the earliest selectable date for this doctor: today if it still has an
+  // open slot, otherwise the first future date (within two weeks) that does —
+  // and disable every date before that in the picker.
+  useEffect(() => {
+    let cancelled = false;
+    setFindingDate(true);
+    (async () => {
+      const start = todayIso();
+      try {
+        if (await dateHasOpenSlot(start, doctorKey, true)) {
+          if (!cancelled) setMinDate(start);
+          return;
+        }
+        const nextMin = addDaysIso(start, 1);
+        if (!cancelled) setMinDate(nextMin);
+        for (let i = 1; i <= MAX_LOOKAHEAD_DAYS; i++) {
+          const candidate = addDaysIso(start, i);
+          if (await dateHasOpenSlot(candidate, doctorKey, false)) {
+            if (!cancelled) setDate(candidate);
+            return;
+          }
+          if (cancelled) return;
+        }
+        if (!cancelled) setDate(nextMin);
+      } catch {
+        // Can't determine yet (e.g. rules not published) — leave today selected;
+        // the per-date slot fetch below will surface the "not set up" message.
+      } finally {
+        if (!cancelled) setFindingDate(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [doctorKey]);
 
   function refreshBookedTimes() {
     return getDocs(collection(db, "slots", date, "doctors", doctorKey, "booked"))
@@ -97,9 +149,25 @@ function Contact() {
     setFormError(null);
     const result = schema.safeParse(Object.fromEntries(new FormData(e.currentTarget)));
     const nextErrors: Record<string, string> = result.success ? {} : Object.fromEntries(result.error.issues.map((x) => [String(x.path[0]), x.message]));
-    if (!selectedTime) nextErrors["time"] = "Please choose an available time slot";
+
+    if (!date) {
+      nextErrors["date"] = "Please select a date";
+    } else if (date < minDate) {
+      nextErrors["date"] = date < todayIso() ? "Past dates cannot be selected" : "No slots remain today — please choose another date";
+    }
+
+    if (!selectedTime) {
+      nextErrors["time"] = "Please choose an available time slot";
+    } else if (date === todayIso()) {
+      const selectedMinutes = Number(selectedTime.slice(0, 2)) * 60 + Number(selectedTime.slice(3, 5));
+      if (selectedMinutes <= nowMinutes()) {
+        nextErrors["time"] = "This time has already passed — please choose another slot";
+        setSelectedTime(null);
+      }
+    }
+
     setErrors(nextErrors);
-    if (!result.success || !selectedTime) return;
+    if (Object.keys(nextErrors).length > 0 || !result.success || !selectedTime) return;
 
     setSubmitting(true);
     const data = result.data;
@@ -168,7 +236,7 @@ function Contact() {
               <form className="mt-7 grid gap-5" onSubmit={submit} noValidate>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="Full Name" name="name" error={errors["name"]} />
-                  <Field label="Phone Number" name="phone" type="tel" error={errors["phone"]} />
+                  <Field label="Phone Number" name="phone" type="tel" inputMode="numeric" maxLength={10} error={errors["phone"]} />
                 </div>
                 <Field label="Email" name="email" type="email" error={errors["email"]} />
 
@@ -182,13 +250,15 @@ function Contact() {
 
                 <label className="grid gap-2 text-sm font-semibold">
                   Preferred Date
-                  <input type="date" value={date} min={todayIso()} onChange={(e) => setDate(e.target.value)} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+                  <input type="date" value={date} min={minDate} onChange={(e) => setDate(e.target.value < minDate ? minDate : e.target.value)} aria-invalid={!!errors["date"]} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+                  {minDate > todayIso() && <span className="text-xs text-muted-foreground">No slots remain today — earliest available date shown.</span>}
+                  {errors["date"] && <span className="text-destructive text-sm">{errors["date"]}</span>}
                 </label>
 
                 <div className="grid gap-2">
                   <span className="text-sm font-semibold">Preferred Time <span className="font-normal text-muted-foreground">(clinic hours 8 AM – 9 PM, 15-min slots)</span></span>
-                  {loadingSlots ? (
-                    <p className="text-sm text-muted-foreground">Checking available slots…</p>
+                  {loadingSlots || findingDate ? (
+                    <p className="text-sm text-muted-foreground">{findingDate ? "Finding the next available date…" : "Checking available slots…"}</p>
                   ) : slotsBlocked ? (
                     <p className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">Online booking isn't set up yet — please call us at {contact.phone1} to book.</p>
                   ) : slots.every((s) => !s.available) ? (
@@ -228,11 +298,11 @@ function Contact() {
     </>
   );
 }
-function Field({ label, name, type = "text", error }: { label: string; name: string; type?: string; error: string | undefined }) {
+function Field({ label, name, type = "text", inputMode, maxLength, error }: { label: string; name: string; type?: string; inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"]; maxLength?: number; error: string | undefined }) {
   return (
     <label className="grid gap-2 text-sm font-semibold">
       {label}
-      <Input name={name} type={type} maxLength={type === "email" ? 255 : 120} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />
+      <Input name={name} type={type} inputMode={inputMode} maxLength={maxLength ?? (type === "email" ? 255 : 120)} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />
       {error && <span id={`${name}-error`} className="text-destructive">{error}</span>}
     </label>
   );

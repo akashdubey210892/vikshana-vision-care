@@ -8,18 +8,18 @@ export const Route = createFileRoute("/services_/$slug")({
   loader: ({ params }) => {
     const service = getService(params.slug);
     if (!service) throw notFound();
-    return { name: service.name, text: service.text };
+    return { name: service.name, seoTitle: service.seoTitle, seoDescription: service.seoDescription, keywords: service.keywords };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Service not found | Vikshana Eye Hospital" }, { name: "robots", content: "noindex" }] };
-    const { name, text } = loaderData;
-    const title = `${name} in Yelahanka | Vikshana Eye Hospital`;
+    const { name, seoTitle, seoDescription, keywords } = loaderData;
     return {
       meta: [
-        { title },
-        { name: "description", content: text },
+        { title: seoTitle },
+        { name: "description", content: seoDescription },
+        { name: "keywords", content: keywords.join(", ") },
         { property: "og:title", content: `${name} | Vikshana Eye Hospital` },
-        { property: "og:description", content: text },
+        { property: "og:description", content: seoDescription },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
       ],

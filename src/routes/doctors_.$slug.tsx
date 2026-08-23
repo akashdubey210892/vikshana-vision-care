@@ -8,17 +8,18 @@ export const Route = createFileRoute("/doctors_/$slug")({
   loader: ({ params }) => {
     const doctor = getDoctor(params.slug);
     if (!doctor) throw notFound();
-    return { name: doctor.name, role: doctor.role };
+    return { name: doctor.name, role: doctor.role, seoDescription: doctor.seoDescription, keywords: doctor.keywords };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Doctor not found | Vikshana Eye Hospital" }, { name: "robots", content: "noindex" }] };
-    const { name, role } = loaderData;
+    const { name, role, seoDescription, keywords } = loaderData;
     return {
       meta: [
         { title: `${name} – ${role} | Vikshana Eye Hospital` },
-        { name: "description", content: `${role} at Vikshana Eye Hospital, Yelahanka. Read the full profile and book an appointment.` },
+        { name: "description", content: seoDescription },
+        { name: "keywords", content: keywords.join(", ") },
         { property: "og:title", content: name },
-        { property: "og:description", content: `${role} at Vikshana Eye Hospital.` },
+        { property: "og:description", content: seoDescription },
         { property: "og:type", content: "profile" },
         { name: "twitter:card", content: "summary_large_image" },
       ],

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 960" role="img" aria-labelledby="fb-title">
+  <title id="fb-title">Illustration of a magnified clinical view during foreign body removal from the eye</title>
+  <defs>
+    <linearGradient id="fb-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eaf6f5"/>
+      <stop offset="1" stop-color="#d7ece9"/>
+    </linearGradient>
+    <radialGradient id="fb-eyeball" cx="0.4" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#4a97a0"/>
+      <stop offset="1" stop-color="#24344d"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="960" fill="url(#fb-bg)"/>
+
+  <ellipse cx="640" cy="500" rx="420" ry="150" fill="#ffffff"/>
+  <path d="M220,500 Q640,300 1060,500 Q640,700 220,500 Z" fill="none" stroke="#24344d" stroke-width="10"/>
+  <circle cx="640" cy="500" r="130" fill="url(#fb-eyeball)"/>
+  <circle cx="640" cy="500" r="58" fill="#101a28"/>
+  <circle cx="614" cy="472" r="20" fill="#ffffff" opacity="0.85"/>
+
+  <circle cx="760" cy="430" r="9" fill="#d9a154" stroke="#8a5a1f" stroke-width="3"/>
+
+  <g transform="translate(870,300) rotate(28)">
+    <circle cx="0" cy="0" r="95" fill="none" stroke="#24344d" stroke-width="18"/>
+    <circle cx="0" cy="0" r="95" fill="#ffffff" opacity="0.35"/>
+    <line x1="66" y1="66" x2="190" y2="190" stroke="#24344d" stroke-width="26" stroke-linecap="round"/>
+  </g>
+
+  <g stroke="#2f7d82" stroke-width="6" stroke-linecap="round" opacity="0.5">
+    <line x1="150" y1="230" x2="200" y2="270"/>
+    <line x1="1130" y1="230" x2="1080" y2="270"/>
+    <line x1="640" y1="150" x2="640" y2="205"/>
+  </g>
+</svg>

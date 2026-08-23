@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 960" role="img" aria-labelledby="ce-title">
+  <title id="ce-title">Illustration of an eye examined for cataract clouding, half clear and half hazy</title>
+  <defs>
+    <linearGradient id="ce-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eaf6f5"/>
+      <stop offset="1" stop-color="#d7ece9"/>
+    </linearGradient>
+    <radialGradient id="ce-clear" cx="0.4" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#4a97a0"/>
+      <stop offset="1" stop-color="#24344d"/>
+    </radialGradient>
+    <radialGradient id="ce-cloudy" cx="0.6" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#dfe7ea"/>
+      <stop offset="1" stop-color="#9fb1b8"/>
+    </radialGradient>
+    <clipPath id="ce-clip"><circle cx="640" cy="500" r="132"/></clipPath>
+  </defs>
+  <rect width="1280" height="960" fill="url(#ce-bg)"/>
+
+  <path d="M210,500 Q640,290 1070,500 Q640,710 210,500 Z" fill="#ffffff"/>
+  <path d="M210,500 Q640,290 1070,500 Q640,710 210,500 Z" fill="none" stroke="#24344d" stroke-width="10"/>
+
+  <g clip-path="url(#ce-clip)">
+    <rect x="508" y="368" width="132" height="264" fill="url(#ce-clear)"/>
+    <rect x="640" y="368" width="132" height="264" fill="url(#ce-cloudy)"/>
+  </g>
+  <circle cx="640" cy="500" r="132" fill="none" stroke="#101a28" stroke-width="6"/>
+  <circle cx="614" cy="472" r="18" fill="#ffffff" opacity="0.8"/>
+  <line x1="640" y1="368" x2="640" y2="632" stroke="#ffffff" stroke-width="4" stroke-dasharray="10 10" opacity="0.8"/>
+
+  <g stroke="#d9a154" stroke-width="10" stroke-linecap="round" opacity="0.9">
+    <line x1="950" y1="330" x2="1030" y2="270"/>
+    <line x1="965" y1="380" x2="1050" y2="360"/>
+    <line x1="955" y1="435" x2="1040" y2="450"/>
+  </g>
+  <circle cx="890" cy="400" r="46" fill="none" stroke="#2f7d82" stroke-width="8"/>
+</svg>

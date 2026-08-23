@@ -16,7 +16,11 @@ import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ShadesOpticalRouteImport } from './routes/shades-optical'
-import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as AboutOurManagementRouteImport } from './routes/about_.our-management'
+import { Route as AboutVikshanaFoundationRouteImport } from './routes/about_.vikshana-foundation'
+import { Route as DoctorsSlugRouteImport } from './routes/doctors_.$slug'
+import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
+import { Route as AboutOurManagementSlugRouteImport } from './routes/about_.our-management_.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,10 +57,30 @@ const ShadesOpticalRoute = ShadesOpticalRouteImport.update({
   path: '/shades-optical',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutOurManagementRoute = AboutOurManagementRouteImport.update({
+  id: '/about_/our-management',
+  path: '/about/our-management',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutVikshanaFoundationRoute = AboutVikshanaFoundationRouteImport.update({
+  id: '/about_/vikshana-foundation',
+  path: '/about/vikshana-foundation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorsSlugRoute = DoctorsSlugRouteImport.update({
+  id: '/doctors_/$slug',
+  path: '/doctors/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ServicesRoute,
+  id: '/services_/$slug',
+  path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutOurManagementSlugRoute = AboutOurManagementSlugRouteImport.update({
+  id: '/about_/our-management_/$slug',
+  path: '/about/our-management/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -65,9 +89,13 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/reviews': typeof ReviewsRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
+  '/about/our-management': typeof AboutOurManagementRoute
+  '/about/vikshana-foundation': typeof AboutVikshanaFoundationRoute
+  '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/about/our-management/$slug': typeof AboutOurManagementSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,9 +103,13 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/reviews': typeof ReviewsRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
+  '/about/our-management': typeof AboutOurManagementRoute
+  '/about/vikshana-foundation': typeof AboutVikshanaFoundationRoute
+  '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/about/our-management/$slug': typeof AboutOurManagementSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,9 +118,13 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/reviews': typeof ReviewsRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
-  '/services/$slug': typeof ServicesSlugRoute
+  '/about_/our-management': typeof AboutOurManagementRoute
+  '/about_/vikshana-foundation': typeof AboutVikshanaFoundationRoute
+  '/doctors_/$slug': typeof DoctorsSlugRoute
+  '/services_/$slug': typeof ServicesSlugRoute
+  '/about_/our-management_/$slug': typeof AboutOurManagementSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,7 +136,11 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/services'
     | '/shades-optical'
+    | '/about/our-management'
+    | '/about/vikshana-foundation'
+    | '/doctors/$slug'
     | '/services/$slug'
+    | '/about/our-management/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,7 +150,11 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/services'
     | '/shades-optical'
+    | '/about/our-management'
+    | '/about/vikshana-foundation'
+    | '/doctors/$slug'
     | '/services/$slug'
+    | '/about/our-management/$slug'
   id:
     | '__root__'
     | '/'
@@ -120,7 +164,11 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/services'
     | '/shades-optical'
-    | '/services/$slug'
+    | '/about_/our-management'
+    | '/about_/vikshana-foundation'
+    | '/doctors_/$slug'
+    | '/services_/$slug'
+    | '/about_/our-management_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,8 +177,13 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DoctorsRoute: typeof DoctorsRoute
   ReviewsRoute: typeof ReviewsRoute
-  ServicesRoute: typeof ServicesRouteWithChildren
+  ServicesRoute: typeof ServicesRoute
   ShadesOpticalRoute: typeof ShadesOpticalRoute
+  AboutOurManagementRoute: typeof AboutOurManagementRoute
+  AboutVikshanaFoundationRoute: typeof AboutVikshanaFoundationRoute
+  DoctorsSlugRoute: typeof DoctorsSlugRoute
+  ServicesSlugRoute: typeof ServicesSlugRoute
+  AboutOurManagementSlugRoute: typeof AboutOurManagementSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -184,27 +237,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShadesOpticalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/$slug'
+    '/about_/our-management': {
+      id: '/about_/our-management'
+      path: '/about/our-management'
+      fullPath: '/about/our-management'
+      preLoaderRoute: typeof AboutOurManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about_/vikshana-foundation': {
+      id: '/about_/vikshana-foundation'
+      path: '/about/vikshana-foundation'
+      fullPath: '/about/vikshana-foundation'
+      preLoaderRoute: typeof AboutVikshanaFoundationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctors_/$slug': {
+      id: '/doctors_/$slug'
+      path: '/doctors/$slug'
+      fullPath: '/doctors/$slug'
+      preLoaderRoute: typeof DoctorsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services_/$slug': {
+      id: '/services_/$slug'
+      path: '/services/$slug'
       fullPath: '/services/$slug'
       preLoaderRoute: typeof ServicesSlugRouteImport
-      parentRoute: typeof ServicesRoute
+      parentRoute: typeof rootRouteImport
+    }
+    '/about_/our-management_/$slug': {
+      id: '/about_/our-management_/$slug'
+      path: '/about/our-management/$slug'
+      fullPath: '/about/our-management/$slug'
+      preLoaderRoute: typeof AboutOurManagementSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface ServicesRouteChildren {
-  ServicesSlugRoute: typeof ServicesSlugRoute
-}
-
-const ServicesRouteChildren: ServicesRouteChildren = {
-  ServicesSlugRoute: ServicesSlugRoute,
-}
-
-const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
-  ServicesRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -212,8 +281,13 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DoctorsRoute: DoctorsRoute,
   ReviewsRoute: ReviewsRoute,
-  ServicesRoute: ServicesRouteWithChildren,
+  ServicesRoute: ServicesRoute,
   ShadesOpticalRoute: ShadesOpticalRoute,
+  AboutOurManagementRoute: AboutOurManagementRoute,
+  AboutVikshanaFoundationRoute: AboutVikshanaFoundationRoute,
+  DoctorsSlugRoute: DoctorsSlugRoute,
+  ServicesSlugRoute: ServicesSlugRoute,
+  AboutOurManagementSlugRoute: AboutOurManagementSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 960" role="img" aria-labelledby="sq-title">
+  <title id="sq-title">Illustration of two eyes assessed for alignment, one looking straight and one turned inward</title>
+  <defs>
+    <linearGradient id="sq-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eaf6f5"/>
+      <stop offset="1" stop-color="#d7ece9"/>
+    </linearGradient>
+    <radialGradient id="sq-eye" cx="0.4" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#4a97a0"/>
+      <stop offset="1" stop-color="#24344d"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="960" fill="url(#sq-bg)"/>
+
+  <path d="M110,400 Q430,240 750,400 Q430,560 110,400 Z" fill="#ffffff" stroke="#24344d" stroke-width="9"/>
+  <circle cx="430" cy="400" r="95" fill="url(#sq-eye)"/>
+  <circle cx="430" cy="400" r="42" fill="#101a28"/>
+  <circle cx="410" cy="380" r="14" fill="#ffffff" opacity="0.85"/>
+
+  <path d="M530,600 Q850,440 1170,600 Q850,760 530,600 Z" fill="#ffffff" stroke="#24344d" stroke-width="9"/>
+  <circle cx="800" cy="600" r="95" fill="url(#sq-eye)"/>
+  <circle cx="800" cy="600" r="42" fill="#101a28"/>
+  <circle cx="782" cy="580" r="14" fill="#ffffff" opacity="0.85"/>
+
+  <line x1="430" y1="400" x2="1170" y2="400" stroke="#2f7d82" stroke-width="4" stroke-dasharray="12 10" opacity="0.7"/>
+  <line x1="800" y1="600" x2="800" y2="400" stroke="#2f7d82" stroke-width="4" stroke-dasharray="12 10" opacity="0.7"/>
+
+  <g transform="translate(870,330)">
+    <path d="M0,40 L40,0 L34,40 L60,60 L20,52 Z" fill="#d9a154"/>
+  </g>
+</svg>

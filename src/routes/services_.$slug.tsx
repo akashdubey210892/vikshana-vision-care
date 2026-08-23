@@ -4,15 +4,15 @@ import { Button } from "../components/ui/button";
 import { Checklist, CtaBand, SectionTitle } from "../components/site-components";
 import { contact, getService, services } from "../lib/site-data";
 
-export const Route = createFileRoute("/services/$slug")({
+export const Route = createFileRoute("/services_/$slug")({
   loader: ({ params }) => {
     const service = getService(params.slug);
     if (!service) throw notFound();
-    return { service };
+    return { name: service.name, text: service.text };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Service not found | Vikshana Eye Hospital" }, { name: "robots", content: "noindex" }] };
-    const { name, text } = loaderData.service;
+    const { name, text } = loaderData;
     const title = `${name} in Yelahanka | Vikshana Eye Hospital`;
     return {
       meta: [
@@ -34,7 +34,8 @@ function ServiceNotFound() {
 }
 
 function ServiceDetail() {
-  const { service } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const service = getService(slug)!;
   const others = services.filter((s) => s.slug !== service.slug).slice(0, 3);
   const Icon = service.icon;
   return (

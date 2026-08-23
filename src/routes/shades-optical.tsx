@@ -46,13 +46,13 @@ function Optical(){return <><PageHero eyebrow="Shades Optical Shop" title="Compl
       {brandGroups.map(({ label, icon: Icon, brands }) => (
         <div key={label}>
           <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary"><Icon className="size-4" />{label}</div>
-          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {brands.map((b) => (
               <div key={b.name} className="flex items-center gap-3 rounded-lg border border-border bg-background p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                 <BrandLogo name={b.name} />
-                <span>
-                  <span className="block font-bold text-brand-deep">{b.name}</span>
-                  {b.tag && <span className="block text-xs text-muted-foreground">{b.tag}</span>}
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-bold text-brand-deep" title={b.name}>{b.name}</span>
+                  {b.tag && <span className="block truncate text-xs text-muted-foreground">{b.tag}</span>}
                 </span>
               </div>
             ))}

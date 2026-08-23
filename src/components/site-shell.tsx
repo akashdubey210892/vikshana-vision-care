@@ -26,7 +26,7 @@ function BrandMark({dark=false}:{dark?:boolean}){
 function DesktopDropdown({label,to,open,setOpen,children}:{label:string,to:"/about"|"/services",open:boolean,setOpen:(v:boolean)=>void,children:React.ReactNode}){
   return <div className="group relative" onMouseEnter={()=>setOpen(true)} onMouseLeave={()=>setOpen(false)} onFocus={()=>setOpen(true)} onBlur={(e)=>{if(!e.currentTarget.contains(e.relatedTarget as Node))setOpen(false);}}>
     <Link to={to} className={navLinkClass} activeProps={{className:"bg-accent text-foreground"}}>{label}<ChevronDown className={`size-3.5 transition-transform ${open?"rotate-180":""}`}/></Link>
-    <div className={`absolute left-0 top-full z-20 pt-1.5 transition duration-150 ${open?"visible translate-y-0 opacity-100":"invisible -translate-y-1 opacity-0"}`}><div className="rounded-lg border border-border bg-background p-2 shadow-xl">{children}</div></div>
+    <div className={`absolute left-0 top-full z-20 pt-1.5 transition duration-150 ${open?"visible translate-y-0 opacity-100":"invisible -translate-y-1 opacity-0"}`}><div className="min-w-56 rounded-lg border border-border bg-background p-2 shadow-xl">{children}</div></div>
   </div>;
 }
 
@@ -40,7 +40,7 @@ export function SiteHeader(){
       <Link to="/" className="flex min-w-0 items-center" onClick={()=>setOpen(false)}><BrandMark/></Link>
       <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
         {links.map(([label,to])=>{
-          if(to==="/about")return <DesktopDropdown key={to} label={label} to={to} open={aboutOpen} setOpen={setAboutOpen}>{aboutMenu.map(([l,t])=><Link key={t} to={t} className={dropdownItemClass}>{l}</Link>)}</DesktopDropdown>;
+          if(to==="/about")return <DesktopDropdown key={to} label={label} to={to} open={aboutOpen} setOpen={setAboutOpen}>{aboutMenu.map(([l,t])=><Link key={t} to={t} className={`${dropdownItemClass} whitespace-nowrap`}>{l}</Link>)}</DesktopDropdown>;
           if(to==="/services")return <DesktopDropdown key={to} label={label} to={to} open={servicesOpen} setOpen={setServicesOpen}><div className="grid w-[520px] grid-cols-2 gap-1">{services.map(s=><Link key={s.slug} to="/services/$slug" params={{slug:s.slug}} className={dropdownItemClass}>{s.name}</Link>)}</div></DesktopDropdown>;
           return <Link key={to} to={to} className="rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground" activeProps={{className:"bg-accent text-foreground"}} activeOptions={{exact:to==="/"}}>{label}</Link>;
         })}

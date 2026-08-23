@@ -5,9 +5,9 @@ import anterior from "../assets/service-anterior.jpg";
 import posterior from "../assets/service-posterior.jpg";
 import refractionImg from "../assets/service-refraction.jpg";
 import cataractSurgery from "../assets/service-cataract-surgery.jpg";
-import foreignBody from "../assets/service-foreign-body.svg";
-import cataractEvaluation from "../assets/service-cataract-evaluation.svg";
-import squint from "../assets/service-squint.svg";
+import foreignBody from "../assets/Foreign_body_removal.jpeg";
+import cataractEvaluation from "../assets/Cataract_evaluation.jpg";
+import squint from "../assets/Squint_evaluation.jpeg";
 import ceoPhoto from "../assets/ceo.jpeg";
 import mdPhoto from "../assets/md.jpeg";
 import hodPhoto from "../assets/hod.png";
@@ -15,7 +15,7 @@ import pawanPhoto from "../assets/Pawan_G_Kumar.jpeg";
 import shwethaPhoto from "../assets/Shwetha_R.jpeg";
 
 export const contact = {
-  phone1: "8009537637", phone2: "8920847760", email: "drykkiran@gmail.com",
+  phone1: "8920847760", phone2: "8009537637", email: "drykkiran@gmail.com",
   address: "#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064",
 };
 export const whatsapp = `https://wa.me/918009537637?text=${encodeURIComponent("Hello, I would like to enquire about eye care at Vikshana Eye Hospital.")}`;
@@ -35,14 +35,14 @@ export const services: Service[] = [
   },
   {
     slug: "foreign-body-removal", name: "Foreign Bodies Removal", text: "Prompt professional assessment and removal of particles affecting the eye.",
-    icon: ShieldCheck, image: foreignBody, alt: "Illustration of a magnified clinical view during foreign body removal from the eye",
+    icon: ShieldCheck, image: foreignBody, alt: "Clinician removing a foreign particle from a patient's eye using forceps under magnification",
     intro: "Dust, metal fragments, wood or plant matter and insect debris are among the most common objects that lodge on the eye's surface, often during grinding, welding, gardening or a windy commute. Attempting removal at home can scratch the cornea or push the particle deeper, so we assess and manage this in a sterile clinical setting. Metallic fragments left in place can also leave a rust ring, which needs careful clearing once the eye is stable.",
     points: ["Immediate clinical assessment of the affected eye", "Fluorescein staining to detect any corneal abrasion", "Sterile, careful removal under magnification", "Removal of rust rings when metallic fragments have been embedded", "Guidance on healing, medication and follow-up"],
     expect: ["Vision check and examination of the injured eye", "Removal under a slit lamp with topical anaesthetic where needed", "A protective eye patch or antibiotic ointment if there is a corneal abrasion", "Review of protective eyewear for work or hobbies"],
   },
   {
     slug: "cataract-evaluation", name: "Cataract Evaluation", text: "A complete assessment to understand cataracts and discuss suitable care options.",
-    icon: ScanEye, image: cataractEvaluation, alt: "Illustration of an eye examined for cataract clouding, half clear and half hazy",
+    icon: ScanEye, image: cataractEvaluation, alt: "Ophthalmologist examining a senior patient's eyes using a slit lamp for cataract evaluation",
     intro: "A cataract is a clouding of the eye's natural lens that gradually affects clarity, contrast and night vision. It is most often age-related but can also follow injury, long-term steroid use or occur from birth. Worldwide, cataract remains the leading cause of reversible vision loss, which is why an unhurried evaluation—covering glare sensitivity, night-vision difficulty and how the change is affecting daily life—matters as much as the diagnosis itself.",
     points: ["Vision assessment and refraction", "Slit-lamp examination to grade lens clouding", "Assessment of glare sensitivity and night-vision difficulty", "Assessment of the retina and overall eye health", "An honest discussion about whether surgery is needed yet"],
     expect: ["A calm, unhurried examination", "Findings explained without pressure or urgency", "Discussion of when surgery becomes advisable, not just possible", "Written guidance on the next appropriate step"],
@@ -84,7 +84,7 @@ export const services: Service[] = [
   },
   {
     slug: "squint-evaluation", name: "Squint Evaluation", text: "Assessment of eye alignment and related visual concerns for children and adults.",
-    icon: HeartHandshake, image: squint, alt: "Illustration of two eyes assessed for alignment, one looking straight and one turned inward",
+    icon: HeartHandshake, image: squint, alt: "Child having an eye alignment assessment, with a before-and-after comparison of squint correction",
     intro: "A squint (strabismus) is a misalignment of the eyes—inward, outward, upward or downward—that affects a meaningful proportion of children and can also appear in adults. Left unmanaged in childhood, it can affect vision, depth perception and confidence, since the brain may suppress the misaligned eye's image and cause amblyopia. When a squint appears suddenly in an adult, it is evaluated carefully, as it can occasionally signal an underlying neurological cause. Evaluation is the first step in managing it well.",
     points: ["Cover test and prism assessment to quantify deviation", "Assessment for associated lazy eye (amblyopia)", "Refraction, since glasses alone sometimes correct a squint", "Screening for an underlying cause in adult-onset cases", "Discussion of exercises, glasses or surgical referral"],
     expect: ["A detailed alignment and movement assessment", "Findings explained for both children and adults", "A staged, realistic plan for follow-up"],

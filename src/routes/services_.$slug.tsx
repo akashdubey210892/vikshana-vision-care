@@ -47,7 +47,7 @@ function ServiceDetail() {
             <h1 className="mt-5 text-4xl leading-tight sm:text-5xl">{service.name}</h1>
             <p className="mt-5 max-w-xl leading-8 opacity-85">{service.intro}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="hero"><a href={`tel:${contact.phone1}`}><Phone/>Call {contact.phone1}</a></Button>
+              <Button asChild size="lg" variant="hero"><a href={`tel:${contact.phone1}`}><Phone/>Call {contact.phone1}, {contact.phone2}</a></Button>
               <Button asChild size="lg" variant="secondary"><Link to="/contact">Contact Us</Link></Button>
             </div>
           </div>

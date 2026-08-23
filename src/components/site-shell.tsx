@@ -35,7 +35,7 @@ export function SiteHeader(){
   const [aboutOpen,setAboutOpen]=useState(false);
   const [servicesOpen,setServicesOpen]=useState(false);
   return <header className="sticky top-0 z-50 border-b border-border/70 bg-background/95 backdrop-blur-xl">
-    <div className="bg-brand-deep text-primary-foreground"><div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:px-6"><span className="flex items-center gap-2"><MapPin className="size-3.5"/>Yelahanka, Bengaluru</span><a className="flex items-center gap-2 font-semibold" href={`tel:${contact.phone1}`}><Phone className="size-3.5"/>Call {contact.phone1}</a></div></div>
+    <div className="bg-brand-deep text-primary-foreground"><div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:px-6"><span className="flex items-center gap-2"><MapPin className="size-3.5"/>Yelahanka, Bengaluru</span><span className="flex items-center gap-2 font-semibold"><Phone className="size-3.5"/>Call <a href={`tel:${contact.phone1}`}>{contact.phone1}</a>, <a href={`tel:${contact.phone2}`}>{contact.phone2}</a></span></div></div>
     <div className="mx-auto grid h-24 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:px-6">
       <Link to="/" className="flex min-w-0 items-center" onClick={()=>setOpen(false)}><BrandMark/></Link>
       <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">

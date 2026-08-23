@@ -71,7 +71,7 @@ function ProfileDetail() {
                   <li key={c} className="flex gap-2.5 text-sm leading-6 text-foreground"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />{c}</li>
                 ))}
               </ul>
-              <Button asChild className="mt-6 w-full"><a href={`tel:${contact.phone1}`}><Phone />Call {contact.phone1}</a></Button>
+              <Button asChild className="mt-6 w-full"><a href={`tel:${contact.phone1}`}><Phone />Call {contact.phone1}, {contact.phone2}</a></Button>
               <Button asChild variant="outline" className="mt-3 w-full"><Link to="/contact">Contact Us</Link></Button>
             </div>
           </aside>

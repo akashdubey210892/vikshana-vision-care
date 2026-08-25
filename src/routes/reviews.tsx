@@ -2,10 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { CtaBand, PageHero, ReviewCard, SectionTitle, Stars } from "../components/site-components";
-import { reviewLinks, reviews } from "../lib/site-data";
+import { reviewLinks } from "../lib/site-data";
+import { useGoogleReviews } from "../lib/use-google-reviews";
 import reviewsImage from "../assets/reviews.jpg";
-
-const average = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
 
 export const Route = createFileRoute("/reviews")({
   head: () => ({
@@ -23,6 +22,10 @@ export const Route = createFileRoute("/reviews")({
 });
 
 function Reviews() {
+  const { reviews, rating, userRatingCount } = useGoogleReviews();
+  const average = rating ?? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1));
+  const reviewCount = userRatingCount ?? reviews.length;
+
   return (
     <>
       <PageHero eyebrow="Patient reviews" title="What our patients say" text="Feedback from patients who have visited Vikshana Eye Hospital in Yelahanka, collected from Google and Just Dial." />
@@ -31,9 +34,9 @@ function Reviews() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid items-center gap-10 rounded-lg bg-brand-soft p-8 sm:p-10 lg:grid-cols-[1fr_1fr]">
             <div>
-              <p className="text-6xl font-extrabold text-brand-deep">{average}</p>
-              <div className="mt-3"><Stars rating={5} /></div>
-              <p className="mt-3 text-sm text-muted-foreground">Based on {reviews.length} recent patient reviews published on Google and Just Dial.</p>
+              <p className="text-6xl font-extrabold text-brand-deep">{average.toFixed(1)}</p>
+              <div className="mt-3"><Stars rating={Math.round(average)} /></div>
+              <p className="mt-3 text-sm text-muted-foreground">Based on {reviewCount} recent patient reviews published on Google and Just Dial.</p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button asChild size="lg"><a href={reviewLinks.google} target="_blank" rel="noreferrer">Review us on Google <ExternalLink className="size-4" /></a></Button>
                 <Button asChild size="lg" variant="outline"><a href={reviewLinks.justdial} target="_blank" rel="noreferrer">Review us on Just Dial <ExternalLink className="size-4" /></a></Button>

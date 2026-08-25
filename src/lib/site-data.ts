@@ -12,11 +12,16 @@ import ceoPhoto from "../assets/ceo.jpeg";
 import mdPhoto from "../assets/md.jpeg";
 import hodPhoto from "../assets/hod.png";
 import pawanPhoto from "../assets/Pawan_G_Kumar.jpeg";
+import mounikaPhoto from "../assets/Mounika_Reddy_Polu.png";
 import shwethaPhoto from "../assets/Shwetha_R.jpeg";
 
 export const contact = {
   phone1: "8920847760", phone2: "8009537637", email: "drykkiran@gmail.com",
   address: "#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064",
+};
+export const socialLinks = {
+  instagram: "https://www.instagram.com/vikshanaeyecarecentre/",
+  facebook: "https://www.facebook.com/share/1BjNaf28Fc/",
 };
 export const whatsapp = `https://wa.me/91${contact.phone1}?text=${encodeURIComponent("Hello, I would like to enquire about eye care at Vikshana Eye Hospital.")}`;
 
@@ -164,8 +169,8 @@ export const management: ManagementProfile[] = [
     slug: "kamal-kiran-yenamandra", initials: "KK", photo: ceoPhoto,
     name: "Gp Capt (Dr) Kamal Kiran Yenamandra (Retd)",
     role: "Chief Executive Officer", org: "Anand Abhigyan Healthcare & Life Sciences",
-    credentials: ["MBBS (AFMC)", "MD (Pediatrics)", "Trained in Pediatric Cardiology & Fetal Echocardiography", "National Instructor – PALS | NALS | BLS | ACLS | ATLS"],
-    tags: ["Pediatrics", "Pediatric Cardiology", "Fetal Echocardiography", "Hospital Administration", "Medical Education", "NABH & Quality Assurance", "Emergency Medicine", "Disaster Medicine"],
+    credentials: ["MBBS (AFMC)", "MD Pediatrics", "Trained in Pediatric Cardiology", "National Instructor – PALS | NALS | BLS | ACLS | ATLS"],
+    tags: ["Fetal Echocardiography", "Hospital Administration", "Medical Education", "NABH & Quality Assurance", "Emergency Medicine", "Disaster Medicine"],
     highlights: [
       "Professor & Head, Department of Pediatrics – Command Hospital Air Force, Bengaluru",
       "Examiner for NBE, RGUHS and MUHS",
@@ -260,6 +265,31 @@ export const doctors: Doctor[] = [
     ],
     keywords: ["Eye Specialist", "Ophthalmologist", "Eye Doctor", "Comprehensive Eye Care", "Cataract Specialist", "Cataract Surgeon", "Complete Eye Examination"],
     seoDescription: "Dr (Wg Cdr) Professor Pawan G Kumar is a consultant ophthalmologist and eye specialist in Yelahanka with 30+ years of experience in comprehensive eye care and cataract treatment.",
+  },
+  {
+    slug: "mounika-reddy-polu", initials: "MR", photo: mounikaPhoto,
+    name: "Dr Mounika Reddy Polu",
+    role: "Consultant Ophthalmologist – Cataract, Cornea & Refractive Services",
+    credentials: ["MBBS", "DNB Ophthalmology (LVPEI)", "Fellowship in Cataract, Cornea & Refractive Services (FSEH)"],
+    tags: ["Cataract Surgery", "Cornea", "Refractive Surgery", "Glaucoma", "Keratoplasty", "Uveitis & Retinopathy"],
+    highlights: [
+      "9+ years of clinical experience in Ophthalmology",
+      "Comprehensive visual system examination along with sub-speciality assessments",
+      "Skilled in Slit-lamp Biomicroscopy, Indirect & Direct Ophthalmoscopy, Gonioscopy and Tonometry",
+      "Experience in Ultrasonography, Yag Capsulotomy and Yag PI",
+      "Experience in Pentacam and Orbscan assessment, Biometry evaluation, Visual fields assessment and Retinal diagnostics",
+      "Medical management of corneal diseases, Glaucoma, Thyroid ophthalmopathy, Squint, Neuro-ophthalmic diseases, Uveitis and Retinopathy",
+      "Confident in assessing cornea, chemical injuries and trauma patients, and evaluating and managing refractive surgery candidates",
+      "Surgical experience in SICS, Phacoemulsification with Anterior Vitrectomy, Pterygium surgery, Corneal & Scleral tear repair, AMG transplantation, Keratoplasty (Therapeutic, Penetrating and Lamellar), SLET, Collagen Cross Linking, Refractive surgeries and Intravitreal injections",
+    ],
+    bio: [
+      "Dr Mounika Reddy Polu is a Consultant Ophthalmologist with over 9 years of experience, trained in MBBS and DNB Ophthalmology from LVPEI, with a Fellowship in Cataract, Cornea and Refractive Services from FSEH.",
+      "She is experienced in performing comprehensive visual system examinations as well as sub-speciality assessments, including Slit-lamp Biomicroscopy, Indirect and Direct Ophthalmoscopy, Gonioscopy, Tonometry, Ultrasonography, Yag Capsulotomy and Yag PI, along with Pentacam and Orbscan assessment, Biometry evaluation, Visual fields assessment and Retinal diagnostics.",
+      "Her clinical focus includes the medical management of sub-speciality diseases such as corneal diseases, Glaucoma, Thyroid ophthalmopathy, Squint, Neuro-ophthalmic diseases, Uveitis and Retinopathy, and she is confident in assessing cornea, chemical injuries and trauma patients, and evaluating and managing patients for refractive surgery.",
+      "Her surgical experience spans SICS, Phacoemulsification with Anterior Vitrectomy, Pterygium surgeries, Corneal and Scleral tear repairs, AMG transplantation, Keratoplasty (Therapeutic, Penetrating and Lamellar), SLET, Collagen Cross Linking, Refractive surgeries and Intravitreal injections.",
+    ],
+    keywords: ["Eye Specialist", "Ophthalmologist", "Cataract Specialist", "Cornea Specialist", "Refractive Surgery", "Keratoplasty", "Glaucoma Specialist"],
+    seoDescription: "Dr Mounika Reddy Polu is a consultant ophthalmologist in Yelahanka with 9+ years of experience in cataract, cornea and refractive surgery, glaucoma and comprehensive eye care.",
   },
   {
     slug: "shwetha-r", initials: "SR", photo: shwethaPhoto,

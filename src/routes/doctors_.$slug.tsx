@@ -72,7 +72,7 @@ function DoctorDetail() {
                   <li key={c} className="flex gap-2.5 text-sm leading-6 text-foreground"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />{c}</li>
                 ))}
               </ul>
-              <Button asChild size="lg" className="mt-6 w-full"><Link to="/contact" search={{ doctor: doctor.slug }}>Book Appointment</Link></Button>
+              <Button asChild size="lg" className="mt-6 w-full"><Link to="/contact" search={{ doctor: doctor.slug }} hash="appointment-form">Book Appointment</Link></Button>
               <Button asChild variant="outline" className="mt-3 w-full"><a href={`tel:${contact.phone1}`}><Phone />Call {contact.phone1}, {contact.phone2}</a></Button>
             </div>
           </aside>

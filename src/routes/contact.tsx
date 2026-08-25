@@ -220,7 +220,7 @@ function Contact() {
             <iframe title="Map of Vikshana Eye Hospital area" src={mapEmbed} loading="lazy" className="mt-8 h-72 w-full rounded-lg border-0" />
           </aside>
 
-          <div className="rounded-lg border border-border bg-card p-6 shadow-lg sm:p-9">
+          <div id="appointment-form" className="scroll-mt-24 rounded-lg border border-border bg-card p-6 shadow-lg sm:p-9">
             <h2 className="text-3xl text-brand-deep">Request an Appointment</h2>
 
             {sent ? (

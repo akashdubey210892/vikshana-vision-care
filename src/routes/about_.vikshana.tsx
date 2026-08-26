@@ -8,6 +8,7 @@ export const Route = createFileRoute("/about_/vikshana")({
     meta: [
       { title: "About Vikshana | Vikshana Eye Hospital" },
       { name: "description", content: "The story, values and journey behind Vikshana Eye Hospital's commitment to responsible, accessible eye care in Yelahanka, Bengaluru." },
+      { name: "keywords", content: "Eye Hospital, Eye Clinic, Eye Care Centre, About Vikshana Eye Hospital, Eye Health Screening Camps, Corporate / School Eye Check-up Camps" },
       { property: "og:title", content: "About Vikshana" },
       { property: "og:description", content: "Our journey and commitment to responsible, accessible eye care." },
       { property: "og:type", content: "website" },

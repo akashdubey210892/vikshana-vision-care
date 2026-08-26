@@ -9,15 +9,20 @@ import { Textarea } from "../components/ui/textarea";
 import { GoogleReviewsTeaser, PageHero } from "../components/site-components";
 import { appointmentWhatsAppLink, contact, directionsUrl, doctors, getDoctor, mapEmbed } from "../lib/site-data";
 import { db } from "../lib/firebase";
-import { addDaysIso, allDaySlots, formatSlotLabel, nowMinutes, todayIso } from "../lib/slots";
+import { addDaysIso, formatSlotLabel, nowMinutes, todayIso } from "../lib/slots";
+import { computeAvailableSlotsForDate } from "../lib/availability";
 
 const MAX_LOOKAHEAD_DAYS = 14;
+const DOCTOR_SLUGS = doctors.map((d) => d.slug);
 
 async function dateHasOpenSlot(dateIso: string, doctorKey: string, isTodayDate: boolean): Promise<boolean> {
-  const snap = await getDocs(collection(db, "slots", dateIso, "doctors", doctorKey, "booked"));
+  const [snap, availableSlots] = await Promise.all([
+    getDocs(collection(db, "slots", dateIso, "doctors", doctorKey, "booked")),
+    computeAvailableSlotsForDate(doctorKey, dateIso, DOCTOR_SLUGS),
+  ]);
   const booked = new Set(snap.docs.map((d) => d.id));
   const nowMins = nowMinutes();
-  return allDaySlots().some((time) => {
+  return availableSlots.some((time) => {
     if (booked.has(time)) return false;
     if (isTodayDate) {
       const mins = Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
@@ -76,6 +81,7 @@ function Contact() {
   const [findingDate, setFindingDate] = useState(true);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookedTimes, setBookedTimes] = useState<Set<string>>(new Set());
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(true);
   const [slotsBlocked, setSlotsBlocked] = useState(false);
 
@@ -124,16 +130,23 @@ function Contact() {
     setLoadingSlots(true);
     setSelectedTime(null);
     setSlotsBlocked(false);
-    getDocs(collection(db, "slots", date, "doctors", doctorKey, "booked"))
-      .then((snap) => { if (!cancelled) setBookedTimes(new Set(snap.docs.map((d) => d.id))); })
-      .catch((err) => { if (!cancelled) { setBookedTimes(new Set()); if (isPermissionDenied(err)) setSlotsBlocked(true); } })
+    Promise.all([
+      getDocs(collection(db, "slots", date, "doctors", doctorKey, "booked")),
+      computeAvailableSlotsForDate(doctorKey, date, DOCTOR_SLUGS),
+    ])
+      .then(([snap, slots]) => {
+        if (cancelled) return;
+        setBookedTimes(new Set(snap.docs.map((d) => d.id)));
+        setAvailableSlots(slots);
+      })
+      .catch((err) => { if (!cancelled) { setBookedTimes(new Set()); setAvailableSlots([]); if (isPermissionDenied(err)) setSlotsBlocked(true); } })
       .finally(() => { if (!cancelled) setLoadingSlots(false); });
     return () => { cancelled = true; };
   }, [date, doctorKey]);
 
   const isToday = date === todayIso();
   const minutesNow = nowMinutes();
-  const slots = allDaySlots().map((time) => {
+  const slots = availableSlots.map((time) => {
     const totalMinutes = Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
     const isPast = isToday && totalMinutes <= minutesNow;
     return { time, available: !bookedTimes.has(time) && !isPast };
@@ -186,7 +199,7 @@ function Contact() {
         name: data.name, phone: data.phone, email: data.email,
         doctor: doctorKey, date, time: selectedTime,
         service: data.service, message: data.message,
-        createdAt: serverTimestamp(),
+        createdAt: serverTimestamp(), emailSent: false,
       });
     } catch (err) {
       setFormError(isPermissionDenied(err) ? "Online booking isn't set up yet — please call us to book this slot." : "Your slot was reserved, but we couldn't save your details. Please call us to confirm.");

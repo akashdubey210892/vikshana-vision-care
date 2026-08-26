@@ -46,3 +46,12 @@ export function addDaysIso(iso: string, days: number): string {
   const day = d.getDate().toString().padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
+
+export const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+export type DayKey = (typeof DAY_KEYS)[number];
+
+/** "2026-08-23" -> "sun" (JS getDay(): 0=Sun..6=Sat, remapped to our Mon-first keys) */
+export function dayKeyForIso(iso: string): DayKey {
+  const jsDay = new Date(iso + "T00:00:00").getDay();
+  return DAY_KEYS[(jsDay + 6) % 7]!;
+}

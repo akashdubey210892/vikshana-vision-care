@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as ReviewsRouteImport } from './routes/reviews'
@@ -18,6 +19,9 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ShadesOpticalRouteImport } from './routes/shades-optical'
 import { Route as AboutOurManagementRouteImport } from './routes/about_.our-management'
 import { Route as AboutVikshanaRouteImport } from './routes/about_.vikshana'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as DoctorsSlugRouteImport } from './routes/doctors_.$slug'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
 import { Route as AboutOurManagementSlugRouteImport } from './routes/about_.our-management_.$slug'
@@ -30,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -67,6 +76,21 @@ const AboutVikshanaRoute = AboutVikshanaRouteImport.update({
   path: '/about/vikshana',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin_/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoctorsSlugRoute = DoctorsSlugRouteImport.update({
   id: '/doctors_/$slug',
   path: '/doctors/$slug',
@@ -86,6 +110,7 @@ const AboutOurManagementSlugRoute = AboutOurManagementSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/reviews': typeof ReviewsRoute
@@ -93,8 +118,11 @@ export interface FileRoutesByFullPath {
   '/shades-optical': typeof ShadesOpticalRoute
   '/about/our-management': typeof AboutOurManagementRoute
   '/about/vikshana': typeof AboutVikshanaRoute
+  '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/about/our-management/$slug': typeof AboutOurManagementSlugRoute
 }
 export interface FileRoutesByTo {
@@ -107,14 +135,18 @@ export interface FileRoutesByTo {
   '/shades-optical': typeof ShadesOpticalRoute
   '/about/our-management': typeof AboutOurManagementRoute
   '/about/vikshana': typeof AboutVikshanaRoute
+  '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/about/our-management/$slug': typeof AboutOurManagementSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/doctors': typeof DoctorsRoute
   '/reviews': typeof ReviewsRoute
@@ -122,8 +154,11 @@ export interface FileRoutesById {
   '/shades-optical': typeof ShadesOpticalRoute
   '/about_/our-management': typeof AboutOurManagementRoute
   '/about_/vikshana': typeof AboutVikshanaRoute
+  '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin_/login': typeof AdminLoginRoute
   '/doctors_/$slug': typeof DoctorsSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/about_/our-management_/$slug': typeof AboutOurManagementSlugRoute
 }
 export interface FileRouteTypes {
@@ -131,6 +166,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/doctors'
     | '/reviews'
@@ -138,8 +174,11 @@ export interface FileRouteTypes {
     | '/shades-optical'
     | '/about/our-management'
     | '/about/vikshana'
+    | '/admin/doctors'
+    | '/admin/login'
     | '/doctors/$slug'
     | '/services/$slug'
+    | '/admin/'
     | '/about/our-management/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -152,13 +191,17 @@ export interface FileRouteTypes {
     | '/shades-optical'
     | '/about/our-management'
     | '/about/vikshana'
+    | '/admin/doctors'
+    | '/admin/login'
     | '/doctors/$slug'
     | '/services/$slug'
+    | '/admin'
     | '/about/our-management/$slug'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/doctors'
     | '/reviews'
@@ -166,14 +209,18 @@ export interface FileRouteTypes {
     | '/shades-optical'
     | '/about_/our-management'
     | '/about_/vikshana'
+    | '/admin/doctors'
+    | '/admin_/login'
     | '/doctors_/$slug'
     | '/services_/$slug'
+    | '/admin/'
     | '/about_/our-management_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
   DoctorsRoute: typeof DoctorsRoute
   ReviewsRoute: typeof ReviewsRoute
@@ -181,6 +228,7 @@ export interface RootRouteChildren {
   ShadesOpticalRoute: typeof ShadesOpticalRoute
   AboutOurManagementRoute: typeof AboutOurManagementRoute
   AboutVikshanaRoute: typeof AboutVikshanaRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   DoctorsSlugRoute: typeof DoctorsSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   AboutOurManagementSlugRoute: typeof AboutOurManagementSlugRoute
@@ -200,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -251,6 +306,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutVikshanaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/doctors': {
+      id: '/admin/doctors'
+      path: '/doctors'
+      fullPath: '/admin/doctors'
+      preLoaderRoute: typeof AdminDoctorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin_/login': {
+      id: '/admin_/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/doctors_/$slug': {
       id: '/doctors_/$slug'
       path: '/doctors/$slug'
@@ -275,9 +351,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminDoctorsRoute: typeof AdminDoctorsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminDoctorsRoute: AdminDoctorsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
   DoctorsRoute: DoctorsRoute,
   ReviewsRoute: ReviewsRoute,
@@ -285,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShadesOpticalRoute: ShadesOpticalRoute,
   AboutOurManagementRoute: AboutOurManagementRoute,
   AboutVikshanaRoute: AboutVikshanaRoute,
+  AdminLoginRoute: AdminLoginRoute,
   DoctorsSlugRoute: DoctorsSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   AboutOurManagementSlugRoute: AboutOurManagementSlugRoute,

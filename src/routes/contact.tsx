@@ -203,12 +203,24 @@ function Contact() {
         name: data.name, phone: data.phone, email: data.email,
         doctor: doctorKey, date, time: selectedTime,
         service: data.service, message: data.message,
-        createdAt: serverTimestamp(), emailSent: false,
+        createdAt: serverTimestamp(),
       });
     } catch (err) {
       setFormError(isPermissionDenied(err) ? "Online booking isn't set up yet — please call us to book this slot." : "Your slot was reserved, but we couldn't save your details. Please call us to confirm.");
       setSubmitting(false);
       return;
+    }
+
+    try {
+      await addDoc(collection(db, "appointmentEmails"), {
+        type: "confirmation",
+        to: data.email, name: data.name,
+        doctor: doctorKey, date, time: selectedTime, service: data.service,
+        createdAt: serverTimestamp(),
+      });
+    } catch {
+      // Best-effort — the appointment itself is already saved; a missed
+      // confirmation email isn't worth surfacing an error to the patient.
     }
 
     const whatsappUrl = appointmentWhatsAppLink({

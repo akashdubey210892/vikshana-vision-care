@@ -53,22 +53,51 @@ function formatDateLabel(dateIso) {
   return new Date(`${dateIso}T00:00:00`).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 }
 
-async function sendConfirmationEmail(appointment) {
-  const dateLabel = formatDateLabel(appointment.date);
-  const timeLabel = formatTimeLabel(appointment.time);
-  const doctor = doctorLabel(appointment.doctor);
+const CLINIC_SIGNATURE = "Vikshana Eye Hospital\n#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064";
+const CLINIC_SIGNATURE_HTML = "<p>Vikshana Eye Hospital<br>#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064</p>";
 
-  await transporter.sendMail({
-    from: `"Vikshana Eye Hospital" <${MAIL_FROM}>`,
-    to: appointment.email,
+function buildEmail(job) {
+  const doctor = doctorLabel(job.doctor);
+
+  if (job.type === "cancelled") {
+    const dateLabel = formatDateLabel(job.date);
+    const timeLabel = formatTimeLabel(job.time);
+    return {
+      subject: "Your appointment at Vikshana Eye Hospital has been cancelled",
+      text: `Hi ${job.name},\n\nYour appointment on ${dateLabel} at ${timeLabel} with ${doctor} has been cancelled.\n\nIf this wasn't expected or you'd like to book another time, please call us.\n\n${CLINIC_SIGNATURE}`,
+      html: `<p>Hi ${job.name},</p><p>Your appointment on <strong>${dateLabel}</strong> at <strong>${timeLabel}</strong> with ${doctor} has been cancelled.</p><p>If this wasn't expected or you'd like to book another time, please call us.</p>${CLINIC_SIGNATURE_HTML}`,
+    };
+  }
+
+  if (job.type === "rescheduled") {
+    const oldDateLabel = formatDateLabel(job.oldDate);
+    const oldTimeLabel = formatTimeLabel(job.oldTime);
+    const newDateLabel = formatDateLabel(job.date);
+    const newTimeLabel = formatTimeLabel(job.time);
+    return {
+      subject: "Your appointment at Vikshana Eye Hospital has been rescheduled",
+      text: `Hi ${job.name},\n\nYour appointment with ${doctor} has been rescheduled:\n\nFrom: ${oldDateLabel} at ${oldTimeLabel}\nTo: ${newDateLabel} at ${newTimeLabel}\n\nIf this doesn't work for you, please call us.\n\n${CLINIC_SIGNATURE}`,
+      html: `<p>Hi ${job.name},</p><p>Your appointment with ${doctor} has been rescheduled:</p><ul><li><strong>From:</strong> ${oldDateLabel} at ${oldTimeLabel}</li><li><strong>To:</strong> ${newDateLabel} at ${newTimeLabel}</li></ul><p>If this doesn't work for you, please call us.</p>${CLINIC_SIGNATURE_HTML}`,
+    };
+  }
+
+  // "confirmation" (default/legacy)
+  const dateLabel = formatDateLabel(job.date);
+  const timeLabel = formatTimeLabel(job.time);
+  return {
     subject: "Your appointment at Vikshana Eye Hospital is confirmed",
-    text: `Hi ${appointment.name},\n\nYour appointment is confirmed:\n\nDoctor: ${doctor}\nDate: ${dateLabel}\nTime: ${timeLabel}\nReason for visit: ${appointment.service}\n\nVikshana Eye Hospital\n#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064\n\nIf you need to reschedule or cancel, please call us.`,
-    html: `<p>Hi ${appointment.name},</p><p>Your appointment is confirmed:</p><ul><li><strong>Doctor:</strong> ${doctor}</li><li><strong>Date:</strong> ${dateLabel}</li><li><strong>Time:</strong> ${timeLabel}</li><li><strong>Reason for visit:</strong> ${appointment.service}</li></ul><p>Vikshana Eye Hospital<br>#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064</p><p>If you need to reschedule or cancel, please call us.</p>`,
-  });
+    text: `Hi ${job.name},\n\nYour appointment is confirmed:\n\nDoctor: ${doctor}\nDate: ${dateLabel}\nTime: ${timeLabel}\nReason for visit: ${job.service}\n\n${CLINIC_SIGNATURE}\n\nIf you need to reschedule or cancel, please call us.`,
+    html: `<p>Hi ${job.name},</p><p>Your appointment is confirmed:</p><ul><li><strong>Doctor:</strong> ${doctor}</li><li><strong>Date:</strong> ${dateLabel}</li><li><strong>Time:</strong> ${timeLabel}</li><li><strong>Reason for visit:</strong> ${job.service}</li></ul>${CLINIC_SIGNATURE_HTML}<p>If you need to reschedule or cancel, please call us.</p>`,
+  };
+}
+
+async function sendJobEmail(job) {
+  const { subject, text, html } = buildEmail(job);
+  await transporter.sendMail({ from: `"Vikshana Eye Hospital" <${MAIL_FROM}>`, to: job.to, subject, text, html });
 }
 
 async function main() {
-  const snap = await db.collection("appointments").where("emailSent", "==", false).get();
+  const snap = await db.collection("appointmentEmails").get();
 
   if (snap.empty) {
     console.log("No pending appointment emails.");
@@ -79,22 +108,22 @@ async function main() {
   let failed = 0;
 
   for (const docSnap of snap.docs) {
-    const appointment = docSnap.data();
-    if (!appointment.email) {
-      await docSnap.ref.update({ emailSent: true });
+    const job = docSnap.data();
+    if (!job.to) {
+      await docSnap.ref.delete();
       continue;
     }
     try {
-      await sendConfirmationEmail(appointment);
-      await docSnap.ref.update({ emailSent: true, emailSentAt: new Date() });
+      await sendJobEmail(job);
+      await docSnap.ref.delete();
       sent++;
     } catch (err) {
-      console.error(`Failed to send confirmation to ${appointment.email}:`, err);
+      console.error(`Failed to send ${job.type ?? "confirmation"} email to ${job.to}:`, err);
       failed++;
     }
   }
 
-  console.log(`Sent ${sent} confirmation email(s), ${failed} failed.`);
+  console.log(`Sent ${sent} email(s), ${failed} failed.`);
 }
 
 main().catch((err) => {

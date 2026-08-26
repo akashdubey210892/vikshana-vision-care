@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, where, writeBatch } from "firebase/firestore";
+import { Pencil, Trash2 } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../components/ui/alert-dialog";
+import { Button, buttonVariants } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { db } from "../lib/firebase";
@@ -28,12 +31,83 @@ function doctorLabel(doctorKey: string) {
   return getDoctor(doctorKey)?.name ?? doctorKey;
 }
 
+async function deleteAppointment(a: Appointment) {
+  const batch = writeBatch(db);
+  batch.delete(doc(db, "appointments", a.id));
+  batch.delete(doc(db, "slots", a.date, "doctors", a.doctor, "booked", a.time));
+  batch.set(doc(collection(db, "appointmentEmails")), {
+    type: "cancelled",
+    to: a.email, name: a.name,
+    doctor: a.doctor, date: a.date, time: a.time, service: a.service,
+    createdAt: serverTimestamp(),
+  });
+  await batch.commit();
+}
+
+/** Returns null on success, or an error message if the target slot is already taken. */
+async function rescheduleAppointment(a: Appointment, newDate: string, newTime: string): Promise<string | null> {
+  if (newDate === a.date && newTime === a.time) return null;
+
+  const targetSnap = await getDoc(doc(db, "slots", newDate, "doctors", a.doctor, "booked", newTime));
+  if (targetSnap.exists()) return "That slot is already booked. Please choose another time.";
+
+  const batch = writeBatch(db);
+  batch.delete(doc(db, "slots", a.date, "doctors", a.doctor, "booked", a.time));
+  batch.set(doc(db, "slots", newDate, "doctors", a.doctor, "booked", newTime), { bookedAt: serverTimestamp() });
+  batch.update(doc(db, "appointments", a.id), { date: newDate, time: newTime });
+  batch.set(doc(collection(db, "appointmentEmails")), {
+    type: "rescheduled",
+    to: a.email, name: a.name,
+    doctor: a.doctor, service: a.service,
+    oldDate: a.date, oldTime: a.time, date: newDate, time: newTime,
+    createdAt: serverTimestamp(),
+  });
+  await batch.commit();
+  return null;
+}
+
+function EditRow({ appointment, onDone }: { appointment: Appointment; onDone: () => void }) {
+  const [newDate, setNewDate] = useState(appointment.date);
+  const [newTime, setNewTime] = useState(appointment.time);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function save() {
+    setSaving(true);
+    setError(null);
+    const err = await rescheduleAppointment(appointment, newDate, newTime);
+    setSaving(false);
+    if (err) {
+      setError(err);
+      return;
+    }
+    onDone();
+  }
+
+  return (
+    <TableRow>
+      <TableCell colSpan={7}>
+        <div className="flex flex-wrap items-center gap-3 py-1">
+          <span className="text-sm font-semibold">{appointment.name}</span>
+          <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+          <input type="time" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+          <Button size="sm" onClick={save} disabled={saving}>{saving ? "Saving…" : "Save"}</Button>
+          <Button size="sm" variant="outline" onClick={onDone} disabled={saving}>Cancel</Button>
+          {error && <span className="text-sm text-destructive">{error}</span>}
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
 function AdminAppointments() {
   const [date, setDate] = useState(todayIso());
   const [search, setSearch] = useState("");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Appointment | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -59,6 +133,17 @@ function AdminAppointments() {
       return a.name.toLowerCase().includes(q) || a.phone.includes(q);
     })
     .sort((a, b) => a.time.localeCompare(b.time));
+
+  async function confirmDelete() {
+    if (!pendingDelete) return;
+    try {
+      await deleteAppointment(pendingDelete);
+    } catch {
+      alert("Couldn't delete this appointment — check that you're signed in and Firestore rules allow staff writes.");
+    } finally {
+      setPendingDelete(null);
+    }
+  }
 
   return (
     <div>
@@ -92,23 +177,49 @@ function AdminAppointments() {
                 <TableHead>Doctor</TableHead>
                 <TableHead>Service</TableHead>
                 <TableHead>Message</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((a) => (
-                <TableRow key={a.id}>
-                  <TableCell>{a.time}</TableCell>
-                  <TableCell>{a.name}</TableCell>
-                  <TableCell>{a.phone}</TableCell>
-                  <TableCell>{doctorLabel(a.doctor)}</TableCell>
-                  <TableCell>{a.service}</TableCell>
-                  <TableCell className="max-w-64 truncate">{a.message}</TableCell>
-                </TableRow>
-              ))}
+              {filtered.map((a) =>
+                editingId === a.id ? (
+                  <EditRow key={a.id} appointment={a} onDone={() => setEditingId(null)} />
+                ) : (
+                  <TableRow key={a.id}>
+                    <TableCell>{a.time}</TableCell>
+                    <TableCell>{a.name}</TableCell>
+                    <TableCell>{a.phone}</TableCell>
+                    <TableCell>{doctorLabel(a.doctor)}</TableCell>
+                    <TableCell>{a.service}</TableCell>
+                    <TableCell className="max-w-64 truncate">{a.message}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="icon" aria-label="Reschedule" onClick={() => setEditingId(a.id)}><Pencil className="size-4" /></Button>
+                        <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => setPendingDelete(a)}><Trash2 className="size-4" /></Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
             </TableBody>
           </Table>
         )}
       </div>
+
+      <AlertDialog open={pendingDelete !== null} onOpenChange={(open) => !open && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this appointment?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingDelete && `This will permanently delete ${pendingDelete.name}'s appointment on ${pendingDelete.date} at ${pendingDelete.time}, and free up that time slot for booking. This cannot be undone.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className={buttonVariants({ variant: "destructive" })} onClick={confirmDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

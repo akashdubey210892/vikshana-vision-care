@@ -1,4 +1,4 @@
-import { Eye, Baby, ScanEye, Glasses, Focus, Sparkles, ShieldCheck, HeartHandshake, MapPin, Stethoscope } from "lucide-react";
+import { Eye, Baby, ScanEye, Glasses, Focus, Sparkles, ShieldCheck, HeartHandshake, MapPin, Stethoscope, Flame, Droplet, Gauge } from "lucide-react";
 import pediatric from "../assets/pediatric-eye-care.jpg";
 import ocularSurface from "../assets/service-ocular-surface.jpg";
 import anterior from "../assets/service-anterior.jpg";
@@ -8,6 +8,9 @@ import cataractSurgery from "../assets/service-cataract-surgery.jpg";
 import foreignBody from "../assets/Foreign_body_removal.jpeg";
 import cataractEvaluation from "../assets/Cataract_evaluation.jpg";
 import squint from "../assets/Squint_evaluation.jpeg";
+import redEye from "../assets/red_eye.jpeg";
+import dryEye from "../assets/dry_eye.jpeg";
+import eyePressureCheck from "../assets/eye_pressure_check.jpeg";
 import ceoPhoto from "../assets/ceo.jpeg";
 import mdPhoto from "../assets/md.jpeg";
 import hodPhoto from "../assets/hod.png";
@@ -135,6 +138,36 @@ export const services: Service[] = [
     keywords: ["Squint Evaluation", "Squint Treatment", "Squint Specialist", "Squint Eye Doctor", "Strabismus Evaluation", "Strabismus Treatment", "Crossed Eyes Treatment", "Children's Squint Treatment", "Eye Alignment Evaluation"],
     seoTitle: "Squint Evaluation & Strabismus Treatment | Vikshana Eye Hospital",
     seoDescription: "Expert squint evaluation and strabismus treatment in Yelahanka. Our squint specialists assess eye alignment and manage crossed eyes in both children and adults.",
+  },
+  {
+    slug: "red-eye-allergy-treatment", name: "Red Eye & Eye Allergy Treatment", text: "Careful evaluation and treatment for red, itchy or watery eyes caused by allergies or irritation.",
+    icon: Flame, image: redEye, alt: "Woman with a red, irritated eye pulling down her lower eyelid in a clinical setting",
+    intro: "A red eye can be caused by many different things—allergic conjunctivitis from pollen, dust or pet dander, viral or bacterial conjunctivitis, dry eye, or minor irritation—and each needs a different approach. Allergic reactions often bring itching and watering alongside redness, while an infection may need antibiotic care and can spread to others. Correctly identifying the cause is the first step before starting any treatment.",
+    points: ["Careful examination to distinguish allergic, infective or other causes of redness", "Assessment of itching, watering, discharge and light sensitivity", "Treatment for seasonal and perennial eye allergies", "Guidance on avoiding common triggers such as dust, pollen and smoke", "Advice on when a red eye needs urgent attention"],
+    expect: ["A slit-lamp examination of the affected eye", "Questions about recent exposure, triggers and duration of symptoms", "Eye drops or other treatment suited to the cause", "Guidance on hygiene to avoid spreading an infective conjunctivitis"],
+    keywords: ["Red Eye Treatment", "Eye Allergy Treatment", "Allergic Conjunctivitis Treatment", "Eye Allergy Specialist", "Conjunctivitis Treatment", "Itchy Eyes Treatment", "Watery Eyes Treatment", "Eye Redness Treatment", "Seasonal Eye Allergy"],
+    seoTitle: "Red Eye & Eye Allergy Treatment in Yelahanka | Vikshana Eye Hospital",
+    seoDescription: "Red eye and eye allergy treatment in Yelahanka, Bengaluru. Careful evaluation of allergic conjunctivitis, itching, watering and eye redness with treatment suited to the cause.",
+  },
+  {
+    slug: "dry-eye-evaluation-treatment", name: "Dry Eye Evaluation & Treatment", text: "Tear film evaluation and a personalized treatment plan for dry, tired or screen-strained eyes.",
+    icon: Droplet, image: dryEye, alt: "Close-up comparison of a patient's dry eyes and itchy eyes alongside a wider view of her irritated eye",
+    intro: "Dry eye happens when your tears don't provide enough lubrication, either because too few tears are produced or because they evaporate too quickly. It is increasingly common with extended screen use, contact lens wear, air-conditioned environments and age, and can cause burning, grittiness, fluctuating vision and discomfort by the end of the day. A proper evaluation identifies the underlying pattern so treatment is targeted rather than guesswork.",
+    points: ["Tear film break-up time and ocular surface staining tests", "Assessment of tear quantity and quality", "Identification of screen-use, environmental or lens-related triggers", "A personalized treatment plan, from lubricating drops to lifestyle changes", "Follow-up to track improvement and adjust treatment"],
+    expect: ["A comfortable, non-invasive set of tests at the slit lamp", "Discussion of screen habits, environment and any contact lens use", "Clear guidance on drops, frequency and simple daily habits", "A realistic timeline for improvement"],
+    keywords: ["Dry Eye Evaluation", "Dry Eye Treatment", "Dry Eye Specialist", "Dry Eye Test", "Tear Film Test", "Digital Eye Strain", "Computer Vision Syndrome", "Dry Eye Clinic", "Chronic Dry Eye Treatment"],
+    seoTitle: "Dry Eye Evaluation & Treatment in Yelahanka | Vikshana Eye Hospital",
+    seoDescription: "Dry eye evaluation and treatment in Yelahanka, Bengaluru. Tear film testing and a personalized treatment plan for burning, grittiness and screen-related dry eye.",
+  },
+  {
+    slug: "eye-pressure-check-nct", name: "Eye Pressure Check (NCT)", text: "A quick, comfortable puff-of-air style test to check eye pressure and screen for glaucoma risk.",
+    icon: Gauge, image: eyePressureCheck, alt: "Clinician measuring a patient's eye pressure using a tonometer, with the pressure reading displayed on screen",
+    intro: "Intraocular pressure—the fluid pressure inside the eye—is one of the key measurements in detecting glaucoma, a condition that can silently damage the optic nerve before any vision loss is noticed. A Non-Contact Tonometer (NCT) measures this pressure with a quick puff of air, without needing numbing drops, making it a comfortable first-line screening test.",
+    points: ["Quick pressure measurement using a puff of air", "No numbing drops required for the test", "Useful screening for glaucoma risk, especially with age, diabetes or family history", "Results reviewed alongside optic nerve and visual field assessment when needed", "Recommended as part of a routine comprehensive eye check-up"],
+    expect: ["A brief test lasting only a few seconds per eye", "A slight puff of air felt on the eye, with no pain", "Pressure readings explained in the context of your overall eye health", "Further testing arranged if the reading needs closer evaluation"],
+    keywords: ["Eye Pressure Check", "Intraocular Pressure Test", "NCT Eye Test", "Non Contact Tonometer", "Glaucoma Screening", "Glaucoma Test", "Eye Pressure Test", "Tonometry", "Glaucoma Risk Assessment"],
+    seoTitle: "Eye Pressure Check (NCT) & Glaucoma Screening | Vikshana Eye Hospital",
+    seoDescription: "Painless eye pressure check using a Non-Contact Tonometer (NCT) in Yelahanka. Quick glaucoma screening as part of a comprehensive eye check-up at Vikshana Eye Hospital.",
   },
 ];
 

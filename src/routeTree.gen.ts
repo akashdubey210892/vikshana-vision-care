@@ -17,7 +17,7 @@ import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ShadesOpticalRouteImport } from './routes/shades-optical'
 import { Route as AboutOurManagementRouteImport } from './routes/about_.our-management'
-import { Route as AboutVikshanaFoundationRouteImport } from './routes/about_.vikshana-foundation'
+import { Route as AboutVikshanaRouteImport } from './routes/about_.vikshana'
 import { Route as DoctorsSlugRouteImport } from './routes/doctors_.$slug'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
 import { Route as AboutOurManagementSlugRouteImport } from './routes/about_.our-management_.$slug'
@@ -62,9 +62,9 @@ const AboutOurManagementRoute = AboutOurManagementRouteImport.update({
   path: '/about/our-management',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutVikshanaFoundationRoute = AboutVikshanaFoundationRouteImport.update({
-  id: '/about_/vikshana-foundation',
-  path: '/about/vikshana-foundation',
+const AboutVikshanaRoute = AboutVikshanaRouteImport.update({
+  id: '/about_/vikshana',
+  path: '/about/vikshana',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoctorsSlugRoute = DoctorsSlugRouteImport.update({
@@ -92,7 +92,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
   '/about/our-management': typeof AboutOurManagementRoute
-  '/about/vikshana-foundation': typeof AboutVikshanaFoundationRoute
+  '/about/vikshana': typeof AboutVikshanaRoute
   '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/about/our-management/$slug': typeof AboutOurManagementSlugRoute
@@ -106,7 +106,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
   '/about/our-management': typeof AboutOurManagementRoute
-  '/about/vikshana-foundation': typeof AboutVikshanaFoundationRoute
+  '/about/vikshana': typeof AboutVikshanaRoute
   '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/about/our-management/$slug': typeof AboutOurManagementSlugRoute
@@ -121,7 +121,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/shades-optical': typeof ShadesOpticalRoute
   '/about_/our-management': typeof AboutOurManagementRoute
-  '/about_/vikshana-foundation': typeof AboutVikshanaFoundationRoute
+  '/about_/vikshana': typeof AboutVikshanaRoute
   '/doctors_/$slug': typeof DoctorsSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
   '/about_/our-management_/$slug': typeof AboutOurManagementSlugRoute
@@ -137,7 +137,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/shades-optical'
     | '/about/our-management'
-    | '/about/vikshana-foundation'
+    | '/about/vikshana'
     | '/doctors/$slug'
     | '/services/$slug'
     | '/about/our-management/$slug'
@@ -151,7 +151,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/shades-optical'
     | '/about/our-management'
-    | '/about/vikshana-foundation'
+    | '/about/vikshana'
     | '/doctors/$slug'
     | '/services/$slug'
     | '/about/our-management/$slug'
@@ -165,7 +165,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/shades-optical'
     | '/about_/our-management'
-    | '/about_/vikshana-foundation'
+    | '/about_/vikshana'
     | '/doctors_/$slug'
     | '/services_/$slug'
     | '/about_/our-management_/$slug'
@@ -180,7 +180,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   ShadesOpticalRoute: typeof ShadesOpticalRoute
   AboutOurManagementRoute: typeof AboutOurManagementRoute
-  AboutVikshanaFoundationRoute: typeof AboutVikshanaFoundationRoute
+  AboutVikshanaRoute: typeof AboutVikshanaRoute
   DoctorsSlugRoute: typeof DoctorsSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   AboutOurManagementSlugRoute: typeof AboutOurManagementSlugRoute
@@ -244,11 +244,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutOurManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about_/vikshana-foundation': {
-      id: '/about_/vikshana-foundation'
-      path: '/about/vikshana-foundation'
-      fullPath: '/about/vikshana-foundation'
-      preLoaderRoute: typeof AboutVikshanaFoundationRouteImport
+    '/about_/vikshana': {
+      id: '/about_/vikshana'
+      path: '/about/vikshana'
+      fullPath: '/about/vikshana'
+      preLoaderRoute: typeof AboutVikshanaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/doctors_/$slug': {
@@ -284,7 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   ShadesOpticalRoute: ShadesOpticalRoute,
   AboutOurManagementRoute: AboutOurManagementRoute,
-  AboutVikshanaFoundationRoute: AboutVikshanaFoundationRoute,
+  AboutVikshanaRoute: AboutVikshanaRoute,
   DoctorsSlugRoute: DoctorsSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   AboutOurManagementSlugRoute: AboutOurManagementSlugRoute,

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Phone, MessageCircle, Instagram, Facebook, MapPin, Mail, ChevronDown } from "lucide-react";
+import { Menu, X, Phone, Instagram, Facebook, MapPin, Mail, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import icon from "../assets/Vikshana_logo_only.png";
 import textVikshana from "../assets/Vikshana_text.png";
 import textEyeCare from "../assets/Vikshana_eye_care.png";
-import { contact, services, socialLinks, whatsapp } from "../lib/site-data";
+import { contact, services, socialLinks } from "../lib/site-data";
 
 const links = [["Home","/"],["About Us","/about"],["Our Doctors","/doctors"],["Our Services","/services"],["Shades Optical Shop","/shades-optical"],["Contact Us","/contact"]] as const;
-const aboutMenu = [["Vikshana Foundation","/about/vikshana-foundation"],["Our Management","/about/our-management"]] as const;
+const aboutMenu = [["About Vikshana","/about/vikshana"],["Our Management","/about/our-management"]] as const;
 
 const navLinkClass = "flex items-center gap-1 rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground";
 const dropdownItemClass = "block rounded-md px-3 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground";
@@ -59,4 +59,3 @@ export function SiteHeader(){
   </header>;
 }
 export function SiteFooter(){return <footer className="bg-brand-deep text-primary-foreground"><div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4"><div><BrandMark dark/><p className="mt-4 text-sm leading-7 opacity-80">Comprehensive eye care with compassion, clarity and a patient-first approach.</p><div className="mt-5 flex gap-2">{([[Instagram,"Instagram",socialLinks.instagram],[Facebook,"Facebook",socialLinks.facebook]] as const).map(([Icon,label,href],i)=><a key={i} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="grid size-10 place-items-center rounded-md border border-primary-foreground/20 hover:bg-primary-foreground/10"><Icon className="size-4"/></a>)}</div></div><div><h2 className="font-sans text-base font-bold">Quick Links</h2><div className="mt-4 grid gap-3 text-sm opacity-80">{links.slice(1).map(([l,t])=><Link key={t} to={t} className="hover:opacity-100">{l}</Link>)}</div></div><div><h2 className="font-sans text-base font-bold">Our Services</h2><div className="mt-4 grid gap-3 text-sm opacity-80">{services.slice(2,9).map(s=><Link key={s.name} to="/services">{s.name}</Link>)}</div></div><div><h2 className="font-sans text-base font-bold">Contact</h2><div className="mt-4 grid gap-4 text-sm leading-6 opacity-85"><a href={`tel:${contact.phone1}`} className="flex gap-3"><Phone className="mt-1 size-4 shrink-0"/>{contact.phone1}<br/>{contact.phone2}</a><a href={`mailto:${contact.email}`} className="flex gap-3"><Mail className="mt-1 size-4 shrink-0"/>{contact.email}</a><p className="flex gap-3"><MapPin className="mt-1 size-4 shrink-0"/>{contact.address}</p></div></div></div><div className="border-t border-primary-foreground/10 px-4 py-5 text-xs opacity-70"><div className="mx-auto flex max-w-7xl items-center justify-center"><span>© 2026 Vikshana Eye Hospital. All rights reserved.</span></div></div></footer>}
-export function WhatsAppButton(){return <a href={whatsapp} target="_blank" rel="noreferrer" aria-label="Enquire on WhatsApp" className="fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform hover:scale-105"><MessageCircle/></a>}

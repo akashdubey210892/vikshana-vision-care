@@ -6,7 +6,7 @@ import { CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-import { PageHero } from "../components/site-components";
+import { GoogleReviewsTeaser, PageHero } from "../components/site-components";
 import { appointmentWhatsAppLink, contact, directionsUrl, doctors, getDoctor, mapEmbed } from "../lib/site-data";
 import { db } from "../lib/firebase";
 import { addDaysIso, allDaySlots, formatSlotLabel, nowMinutes, todayIso } from "../lib/slots";
@@ -293,6 +293,11 @@ function Contact() {
               </form>
             )}
           </div>
+        </div>
+      </section>
+      <section className="section-pad bg-muted">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <GoogleReviewsTeaser />
         </div>
       </section>
     </>

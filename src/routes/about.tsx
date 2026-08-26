@@ -6,7 +6,7 @@ import foundation from "../assets/vikshana-foundation.jpg";
 export const Route=createFileRoute("/about")({head:()=>({meta:[{title:"About Vikshana Eye Hospital | Eye Care Centre in Yelahanka"},{name:"description",content:"Learn about Vikshana Eye Hospital, a patient-first eye care centre and ophthalmology clinic in Yelahanka. Our vision, mission and commitment to compassionate, comprehensive eye care."},{name:"keywords",content:"Eye Hospital, Eye Clinic, Eye Care Centre, Ophthalmology Hospital, Ophthalmology Clinic, Comprehensive Eye Care"},{property:"og:title",content:"About Vikshana Eye Hospital"},{property:"og:description",content:"Our vision, mission and commitment to ethical, compassionate eye care in Bengaluru."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}],links:[{rel:"canonical",href:"/about"}]}),component:About});
 
 const aboutLinks = [
-  { to: "/about/vikshana-foundation", icon: HeartHandshake, eyebrow: "Vikshana Foundation", title: "Our journey and commitment to responsible care", text: "Discover the story behind Vikshana Eye Hospital and the values that guide our journey." },
+  { to: "/about/vikshana", icon: HeartHandshake, eyebrow: "About Vikshana", title: "Our journey and commitment to responsible care", text: "Discover the story behind Vikshana Eye Hospital and the values that guide our journey." },
   { to: "/about/our-management", icon: Users, eyebrow: "Leadership", title: "Meet Our Management", text: "Get to know the leadership guiding our clinical standards and patient care." },
 ] as const;
 

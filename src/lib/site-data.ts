@@ -23,8 +23,6 @@ export const socialLinks = {
   instagram: "https://www.instagram.com/vikshanaeyecarecentre/",
   facebook: "https://www.facebook.com/share/1BjNaf28Fc/",
 };
-export const whatsapp = `https://wa.me/91${contact.phone1}?text=${encodeURIComponent("Hello, I would like to enquire about eye care at Vikshana Eye Hospital.")}`;
-
 export function appointmentWhatsAppLink(details: { name: string; phone: string; email: string; doctorLabel: string; date: string; time: string; service: string; message?: string }) {
   const lines = [
     "New Appointment Request",
@@ -142,19 +140,12 @@ export const services: Service[] = [
 
 export const getService = (slug: string) => services.find((s) => s.slug === slug);
 
+export const googlePlaceId = "ChIJY-N2KnAZrjsRlgTe1ojhQWo";
+
 export const reviewLinks = {
-  google: "https://www.google.com/search?q=Vikshana+Eye+Hospital+Yelahanka+Bengaluru+reviews",
+  google: `https://search.google.com/local/writereview?placeid=${googlePlaceId}`,
   justdial: "https://www.justdial.com/Bangalore/Vikshana-Eye-Hospital-Yelahanka",
 };
-
-export const reviews = [
-  { name: "Ramesh K.", source: "Google", rating: 5, text: "The doctor explained my cataract report patiently and never rushed the consultation. The clinic is clean and very well organised." },
-  { name: "Anitha S.", source: "Google", rating: 5, text: "Took my daughter for an eye check-up. The team was gentle with her and explained everything to us clearly. Highly recommended for children." },
-  { name: "Mohan Reddy", source: "Just Dial", rating: 5, text: "Very reasonable and honest. I was told my eyes did not need surgery yet, which I appreciated a lot." },
-  { name: "Priya N.", source: "Google", rating: 4, text: "Good experience with the refraction test and the optical shop. Staff helped me pick comfortable frames." },
-  { name: "Suresh Babu", source: "Just Dial", rating: 5, text: "Got a metal particle removed from my eye. Quick, careful and professional handling. Thank you to the team." },
-  { name: "Lakshmi Devi", source: "Google", rating: 5, text: "Convenient location on Doddaballapur Main Road and the staff speak Kannada, English and Hindi. Very comfortable visit." },
-];
 
 export const directionsUrl = "https://www.google.com/maps/search/?api=1&query=Vikshana+Eye+Hospital+Singanayakanahalli+Yelahanka+Bengaluru+560064";
 export const mapEmbed = "https://www.google.com/maps?q=Singanayakanahalli%20Yelahanka%20Bengaluru%20560064&output=embed";

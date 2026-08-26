@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Award, CheckCircle2, Phone, Star } from "lucide-react";
 import { Button } from "./ui/button";
-import { contact, services, type Doctor, type ManagementProfile } from "../lib/site-data";
+import { contact, reviewLinks, services, type Doctor, type ManagementProfile } from "../lib/site-data";
+import { useGoogleReviews } from "../lib/use-google-reviews";
 
 export function PageHero({eyebrow,title,text}:{eyebrow:string,title:string,text:string}){return <section className="bg-brand-deep text-primary-foreground"><div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28"><p className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-warm">{eyebrow}</p><h1 className="max-w-4xl text-4xl leading-tight sm:text-6xl">{title}</h1><p className="mt-5 max-w-2xl text-base leading-8 opacity-80 sm:text-lg">{text}</p></div></section>}
 export function SectionTitle({eyebrow,title,text,center=false}:{eyebrow?:string,title:string,text?:string,center?:boolean}){return <div className={center?"mx-auto max-w-3xl text-center":"max-w-3xl"}>{eyebrow&&<p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary">{eyebrow}</p>}<h2 className="text-3xl leading-tight text-brand-deep sm:text-5xl">{title}</h2>{text&&<p className="mt-4 leading-7 text-muted-foreground">{text}</p>}</div>}
@@ -19,3 +20,15 @@ export function CtaBand(){return <section className="bg-primary text-primary-for
 export function Checklist({items}:{items:string[]}){return <ul className="mt-6 grid gap-3">{items.map(i=><li key={i} className="flex gap-3 text-sm leading-6"><CheckCircle2 className="mt-0.5 size-5 shrink-0 text-primary"/>{i}</li>)}</ul>}
 export function Stars({rating}:{rating:number}){return <span className="flex gap-0.5" aria-label={`${rating} out of 5 stars`}>{[1,2,3,4,5].map(n=><Star key={n} className={`size-4 ${n<=rating?"fill-brand-warm text-brand-warm":"text-border"}`}/>)}</span>}
 export function ReviewCard({name,source,rating,text}:{name:string,source:string,rating:number,text:string}){return <article className="flex h-full flex-col rounded-lg border border-border bg-card p-6 shadow-sm"><Stars rating={rating}/><p className="mt-4 flex-1 text-sm leading-7 text-muted-foreground">“{text}”</p><div className="mt-5 border-t border-border pt-4"><strong className="block text-sm text-brand-deep">{name}</strong><span className="text-xs font-semibold uppercase tracking-widest text-primary">via {source}</span></div></article>}
+export function GoogleReviewsTeaser(){
+  const {reviews,rating,userRatingCount,loading}=useGoogleReviews();
+  if(loading)return null;
+  if(rating==null&&reviews.length===0)return <div className="flex flex-col items-center gap-4 rounded-lg bg-background p-10 text-center shadow-sm">
+    <p className="text-lg font-bold text-brand-deep">No reviews yet</p>
+    <p className="text-sm text-muted-foreground">Be the first to share your experience with Vikshana Eye Hospital.</p>
+    <Button asChild variant="outline"><a href={reviewLinks.google} target="_blank" rel="noreferrer">Leave a Review on Google</a></Button>
+  </div>;
+  const average=rating??Number((reviews.reduce((sum,r)=>sum+r.rating,0)/reviews.length).toFixed(1));
+  const count=userRatingCount??reviews.length;
+  return <div className="flex flex-col items-center gap-4 rounded-lg bg-background p-10 text-center shadow-sm"><Stars rating={Math.round(average)}/><p className="text-2xl font-bold text-brand-deep">{average.toFixed(1)} rating from {count} patient reviews</p><Button asChild variant="outline"><Link to="/reviews">Read Patient Reviews</Link></Button></div>;
+}

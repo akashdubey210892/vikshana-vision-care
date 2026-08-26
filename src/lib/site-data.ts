@@ -23,7 +23,7 @@ export const contact = {
   address: "#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road, Yelahanka, Bengaluru – 560064",
 };
 export const socialLinks = {
-  instagram: "https://www.instagram.com/vikshanaeyecarecentre/",
+  instagram: "https://www.instagram.com/vikshanaeyehospital/",
   facebook: "https://www.facebook.com/share/1BjNaf28Fc/",
 };
 export function appointmentWhatsAppLink(details: { name: string; phone: string; email: string; doctorLabel: string; date: string; time: string; service: string; message?: string }) {

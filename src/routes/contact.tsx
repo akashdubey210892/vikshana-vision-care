@@ -157,6 +157,10 @@ function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState<Sent | null>(null);
 
+  useEffect(() => {
+    if (sent) document.getElementById("appointment-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [sent]);
+
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setFormError(null);

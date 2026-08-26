@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Input } from "../components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { db } from "../lib/firebase";
@@ -36,23 +36,20 @@ function AdminAppointments() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
     setLoading(true);
     setError(null);
-    getDocs(query(collection(db, "appointments"), where("date", "==", date)))
-      .then((snap) => {
-        if (cancelled) return;
+    const unsubscribe = onSnapshot(
+      query(collection(db, "appointments"), where("date", "==", date)),
+      (snap) => {
         setAppointments(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Appointment, "id">) })));
-      })
-      .catch(() => {
-        if (!cancelled) setError("Couldn't load appointments — check that you're signed in and Firestore rules allow staff reads.");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+        setLoading(false);
+      },
+      () => {
+        setError("Couldn't load appointments — check that you're signed in and Firestore rules allow staff reads.");
+        setLoading(false);
+      },
+    );
+    return unsubscribe;
   }, [date]);
 
   const filtered = appointments
@@ -66,6 +63,7 @@ function AdminAppointments() {
   return (
     <div>
       <h2 className="text-2xl font-bold text-brand-deep">Appointments</h2>
+      <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground"><span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />Updates automatically — no need to refresh</p>
       <div className="mt-5 flex flex-wrap gap-4">
         <label className="grid gap-1.5 text-sm font-semibold">
           Date

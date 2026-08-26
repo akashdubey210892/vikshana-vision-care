@@ -1,15 +1,11 @@
-import { useState } from "react";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ShieldAlert } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { authReady, getCurrentUser, signInStaff } from "../lib/auth";
 
 export const Route = createFileRoute("/admin_/login")({
-  beforeLoad: async () => {
-    await authReady;
-    if (getCurrentUser()) throw redirect({ to: "/admin" });
-  },
   head: () => ({
     meta: [{ title: "Staff Login | Vikshana Eye Hospital" }],
   }),
@@ -22,6 +18,18 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Client-side only, same reasoning as admin.tsx: the server never sees the
+  // browser's persisted Firebase session, so this can't be a `beforeLoad`.
+  useEffect(() => {
+    let cancelled = false;
+    authReady.then(() => {
+      if (!cancelled && getCurrentUser()) navigate({ to: "/admin" });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

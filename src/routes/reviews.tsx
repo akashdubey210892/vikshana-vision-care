@@ -9,11 +9,11 @@ import reviewsImage from "../assets/reviews.jpg";
 export const Route = createFileRoute("/reviews")({
   head: () => ({
     meta: [
-      { title: "Patient Reviews | Vikshana Eye Hospital, Yelahanka" },
-      { name: "description", content: "Read what patients say about eye care at Vikshana Eye Hospital in Yelahanka, Bengaluru, and share your own review on Google." },
-      { name: "keywords", content: "Eye Hospital, Eye Clinic, Eye Care Centre, Patient Reviews, Google Reviews" },
+      { title: "Patient Reviews | Vikshana Eye Hospital, Yelahanka, Bangalore" },
+      { name: "description", content: "Read what patients say about eye care at Vikshana Eye Hospital in Yelahanka, Bangalore (Bengaluru), and share your own review on Google." },
+      { name: "keywords", content: "Eye Hospital Bangalore, Eye Clinic, Eye Care Centre, Patient Reviews, Google Reviews" },
       { property: "og:title", content: "Patient Reviews | Vikshana Eye Hospital" },
-      { property: "og:description", content: "Recent patient feedback from Google for Vikshana Eye Hospital, Yelahanka." },
+      { property: "og:description", content: "Recent patient feedback from Google for Vikshana Eye Hospital, Yelahanka, Bangalore." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

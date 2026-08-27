@@ -45,11 +45,11 @@ export const Route = createFileRoute("/contact")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Contact Us | Book an Eye Checkup in Yelahanka | Vikshana Eye Hospital" },
-      { name: "description", content: "Book an eye checkup or routine eye examination at Vikshana Eye Hospital, Doddaballapur Main Road, Yelahanka, Bengaluru. Call 8920847760, 8009537637." },
-      { name: "keywords", content: "Eye Checkup, Eye Health Checkup, Routine Eye Examination, Complete Eye Examination, Eye Hospital, Eye Clinic, Vision Care" },
+      { title: "Contact Us | Book an Eye Checkup in Yelahanka, Bangalore | Vikshana Eye Hospital" },
+      { name: "description", content: "Book an eye checkup or routine eye examination at Vikshana Eye Hospital, Doddaballapur Main Road, Yelahanka, Bangalore (Bengaluru). Call 8920847760, 8009537637." },
+      { name: "keywords", content: "Eye Checkup Bangalore, Eye Health Checkup, Routine Eye Examination, Complete Eye Examination, Eye Hospital Bangalore, Eye Clinic, Vision Care" },
       { property: "og:title", content: "Contact Vikshana Eye Hospital" },
-      { property: "og:description", content: "Book an appointment or get directions to our eye hospital in Yelahanka, Bengaluru." },
+      { property: "og:description", content: "Book an appointment or get directions to our eye hospital in Yelahanka, Bangalore." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

@@ -11,8 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "zip-source": "node scripts/zip-source.js",
-    "prebuild": "npm run zip-source",
-    "sync-reviews": "node scripts/sync-google-reviews.js"
+    "prebuild": "npm run zip-source"
   },
   "overrides": {
     "rolldown": "1.2.1"
@@ -84,7 +83,6 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
-    "firebase-admin": "^13.10.0",
     "globals": "^15.15.0",
     "jszip": "^3.10.1",
     "nitro": "3.0.260603-beta",

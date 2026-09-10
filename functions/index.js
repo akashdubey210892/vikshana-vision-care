@@ -1,6 +1,8 @@
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { defineSecret } = require("firebase-functions/params");
 const { initializeApp, getApps } = require("firebase-admin/app");
+const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const nodemailer = require("nodemailer");
 
 if (!getApps().length) {
@@ -12,6 +14,9 @@ const SMTP_PORT = defineSecret("SMTP_PORT");
 const SMTP_USER = defineSecret("SMTP_USER");
 const SMTP_PASS = defineSecret("SMTP_PASS");
 const MAIL_FROM = defineSecret("MAIL_FROM");
+
+const GOOGLE_PLACE_ID = defineSecret("GOOGLE_PLACE_ID");
+const GOOGLE_PLACES_API_KEY = defineSecret("GOOGLE_PLACES_API_KEY");
 
 // Kept in sync with the doctors list in src/lib/site-data.ts.
 const DOCTOR_NAMES = {
@@ -107,5 +112,60 @@ exports.sendAppointmentEmail = onDocumentCreated(
       console.error(`Failed to send ${job.type ?? "confirmation"} email to ${job.to}:`, err);
       throw err;
     }
+  }
+);
+
+const REVIEWS_FIELD_MASK = "id,displayName,rating,userRatingCount,reviews";
+
+async function fetchPlaceDetails(placeId, apiKey) {
+  const url = `https://places.googleapis.com/v1/places/${placeId}`;
+  const res = await fetch(url, {
+    headers: {
+      "X-Goog-Api-Key": apiKey,
+      "X-Goog-FieldMask": REVIEWS_FIELD_MASK,
+    },
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Places API request failed (${res.status}): ${body}`);
+  }
+
+  return res.json();
+}
+
+function mapReview(review) {
+  return {
+    name: review.authorAttribution?.displayName ?? "Google user",
+    source: "Google",
+    rating: review.rating ?? 0,
+    text: review.text?.text ?? review.originalText?.text ?? "",
+    publishTime: review.publishTime ?? null,
+  };
+}
+
+exports.syncGoogleReviews = onSchedule(
+  {
+    schedule: "0 3 * * *",
+    timeZone: "Etc/UTC",
+    secrets: [GOOGLE_PLACE_ID, GOOGLE_PLACES_API_KEY],
+  },
+  async () => {
+    const placeId = GOOGLE_PLACE_ID.value();
+    const place = await fetchPlaceDetails(placeId, GOOGLE_PLACES_API_KEY.value());
+
+    await getFirestore()
+      .collection("reviewsSync")
+      .doc("vikshana")
+      .set({
+        placeId,
+        displayName: place.displayName?.text ?? null,
+        rating: place.rating ?? null,
+        userRatingCount: place.userRatingCount ?? null,
+        reviews: (place.reviews ?? []).map(mapReview),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+
+    console.log(`Synced ${place.reviews?.length ?? 0} reviews for ${place.displayName?.text ?? placeId}.`);
   }
 );

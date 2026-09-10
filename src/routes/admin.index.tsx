@@ -138,7 +138,8 @@ function AdminAppointments() {
     if (!pendingDelete) return;
     try {
       await deleteAppointment(pendingDelete);
-    } catch {
+    } catch (err) {
+      console.error("Failed to delete appointment:", err);
       alert("Couldn't delete this appointment — check that you're signed in and Firestore rules allow staff writes.");
     } finally {
       setPendingDelete(null);

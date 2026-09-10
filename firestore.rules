@@ -1,0 +1,100 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Patient appointment data.
+    // Clients can create appointments but cannot read, update,
+    // or delete appointment records.
+    match /appointments/{appointmentId} {
+
+      allow read: if false;
+
+      allow update, delete: if false;
+
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          'name',
+          'phone',
+          'email',
+          'doctor',
+          'date',
+          'time',
+          'service',
+          'message',
+          'createdAt'
+        ])
+
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() < 200
+
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() > 0
+        && request.resource.data.phone.size() < 30
+
+        && request.resource.data.email is string
+        && request.resource.data.email.size() < 255
+
+        && request.resource.data.doctor is string
+
+        && request.resource.data.date is string
+
+        && request.resource.data.time is string
+
+        // "service" is a reserved keyword, so use bracket notation.
+        && request.resource.data['service'] is string
+        && request.resource.data['service'].size() < 200
+
+        && request.resource.data.message is string
+        && request.resource.data.message.size() < 1000
+
+        && request.resource.data.createdAt == request.time;
+    }
+
+
+    // Publicly readable booked slots.
+    // Clients can create a slot but cannot modify or delete it.
+    //
+    // If two patients attempt to create the same slot,
+    // Firestore will reject the second create because the document
+    // already exists.
+    match /slots/{date}/doctors/{doctorKey}/booked/{time} {
+
+      allow read: if true;
+
+      allow update, delete: if false;
+
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          'bookedAt'
+        ])
+
+        && request.resource.data.bookedAt == request.time;
+    }
+
+    // Staff can free up a slot (appointment cancellation/reschedule).
+    match /slots/{date}/doctors/{doctorKey}/booked/{time} {
+       allow delete: if request.auth != null;
+    }
+
+    match /reviewsSync/{document} {
+       allow read: if true;
+       allow write: if false;
+    }
+
+    match /appointments/{doc} {
+       allow create: if true;
+       allow read, update, delete: if request.auth != null;
+    }
+    match /doctorAvailability/{doctorSlug} {
+       allow read: if true;
+       allow write: if request.auth != null;
+    }
+
+    match /appointmentEmails/{doc} {
+       allow create: if true;
+       allow read, delete: if request.auth != null;
+    }
+  }
+}

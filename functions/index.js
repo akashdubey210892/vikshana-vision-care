@@ -1,33 +1,17 @@
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import nodemailer from "nodemailer";
-
-const SERVICE_ACCOUNT_JSON = process.env.FIREBASE_SERVICE_ACCOUNT;
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = process.env.SMTP_PORT;
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
-const MAIL_FROM = process.env.MAIL_FROM ?? SMTP_USER;
-
-if (!SERVICE_ACCOUNT_JSON || !SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
-  console.error("Missing one of FIREBASE_SERVICE_ACCOUNT, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS env vars.");
-  process.exit(1);
-}
-
-const serviceAccount = JSON.parse(SERVICE_ACCOUNT_JSON);
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const { defineSecret } = require("firebase-functions/params");
+const { initializeApp, getApps } = require("firebase-admin/app");
+const nodemailer = require("nodemailer");
 
 if (!getApps().length) {
-  initializeApp({ credential: cert(serviceAccount) });
+  initializeApp();
 }
 
-const db = getFirestore();
-
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: Number(SMTP_PORT),
-  secure: Number(SMTP_PORT) === 465,
-  auth: { user: SMTP_USER, pass: SMTP_PASS },
-});
+const SMTP_HOST = defineSecret("SMTP_HOST");
+const SMTP_PORT = defineSecret("SMTP_PORT");
+const SMTP_USER = defineSecret("SMTP_USER");
+const SMTP_PASS = defineSecret("SMTP_PASS");
+const MAIL_FROM = defineSecret("MAIL_FROM");
 
 // Kept in sync with the doctors list in src/lib/site-data.ts.
 const DOCTOR_NAMES = {
@@ -91,42 +75,37 @@ function buildEmail(job) {
   };
 }
 
-async function sendJobEmail(job) {
-  const { subject, text, html } = buildEmail(job);
-  await transporter.sendMail({ from: `"Vikshana Eye Hospital" <${MAIL_FROM}>`, to: job.to, subject, text, html });
-}
+exports.sendAppointmentEmail = onDocumentCreated(
+  {
+    document: "appointmentEmails/{emailId}",
+    secrets: [SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_FROM],
+    retry: true,
+  },
+  async (event) => {
+    const job = event.data.data();
+    const ref = event.data.ref;
 
-async function main() {
-  const snap = await db.collection("appointmentEmails").get();
-
-  if (snap.empty) {
-    console.log("No pending appointment emails.");
-    return;
-  }
-
-  let sent = 0;
-  let failed = 0;
-
-  for (const docSnap of snap.docs) {
-    const job = docSnap.data();
     if (!job.to) {
-      await docSnap.ref.delete();
-      continue;
+      await ref.delete();
+      return;
     }
+
+    const transporter = nodemailer.createTransport({
+      host: SMTP_HOST.value(),
+      port: Number(SMTP_PORT.value()),
+      secure: Number(SMTP_PORT.value()) === 465,
+      auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() },
+    });
+
+    const { subject, text, html } = buildEmail(job);
+    const mailFrom = MAIL_FROM.value() || SMTP_USER.value();
+
     try {
-      await sendJobEmail(job);
-      await docSnap.ref.delete();
-      sent++;
+      await transporter.sendMail({ from: `"Vikshana Eye Hospital" <${mailFrom}>`, to: job.to, subject, text, html });
+      await ref.delete();
     } catch (err) {
       console.error(`Failed to send ${job.type ?? "confirmation"} email to ${job.to}:`, err);
-      failed++;
+      throw err;
     }
   }
-
-  console.log(`Sent ${sent} email(s), ${failed} failed.`);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+);

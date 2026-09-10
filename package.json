@@ -12,8 +12,7 @@
     "format": "prettier --write .",
     "zip-source": "node scripts/zip-source.js",
     "prebuild": "npm run zip-source",
-    "sync-reviews": "node scripts/sync-google-reviews.js",
-    "send-appointment-emails": "node scripts/send-appointment-emails.js"
+    "sync-reviews": "node scripts/sync-google-reviews.js"
   },
   "overrides": {
     "rolldown": "1.2.1"
@@ -89,7 +88,6 @@
     "globals": "^15.15.0",
     "jszip": "^3.10.1",
     "nitro": "3.0.260603-beta",
-    "nodemailer": "^7.0.13",
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",

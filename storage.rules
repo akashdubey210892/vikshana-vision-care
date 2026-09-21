@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Offer and campaign images: public to view, staff-only to upload or delete.
+    match /{folder}/{file} {
+      allow read: if folder in ['offers', 'campaigns'];
+      allow delete: if request.auth != null && folder in ['offers', 'campaigns'];
+      allow create: if request.auth != null
+        && folder in ['offers', 'campaigns']
+        && request.resource.contentType.matches('image/.*')
+        && request.resource.size < 2 * 1024 * 1024;
+      allow update: if false;
+    }
+  }
+}

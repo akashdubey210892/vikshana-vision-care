@@ -55,6 +55,8 @@ function AdminLayout() {
           <nav className="flex flex-wrap items-center gap-2" aria-label="Admin navigation">
             <Link to="/admin" className="rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }} activeOptions={{ exact: true }}>Appointments</Link>
             <Link to="/admin/doctors" className="rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }}>Doctor Availability</Link>
+            <Link to="/admin/offers" className="rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }}>Offers</Link>
+            <Link to="/admin/campaigns" className="rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }}>Campaigns</Link>
             <Button variant="outline" onClick={handleLogout}>Logout</Button>
           </nav>
         </div>

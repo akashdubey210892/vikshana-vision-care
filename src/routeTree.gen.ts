@@ -20,7 +20,9 @@ import { Route as ShadesOpticalRouteImport } from './routes/shades-optical'
 import { Route as AboutOurManagementRouteImport } from './routes/about_.our-management'
 import { Route as AboutVikshanaRouteImport } from './routes/about_.vikshana'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminOffersRouteImport } from './routes/admin.offers'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as DoctorsSlugRouteImport } from './routes/doctors_.$slug'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
@@ -81,9 +83,19 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
   id: '/doctors',
   path: '/doctors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOffersRoute = AdminOffersRouteImport.update({
+  id: '/offers',
+  path: '/offers',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -118,7 +130,9 @@ export interface FileRoutesByFullPath {
   '/shades-optical': typeof ShadesOpticalRoute
   '/about/our-management': typeof AboutOurManagementRoute
   '/about/vikshana': typeof AboutVikshanaRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/offers': typeof AdminOffersRoute
   '/admin/login': typeof AdminLoginRoute
   '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -135,7 +149,9 @@ export interface FileRoutesByTo {
   '/shades-optical': typeof ShadesOpticalRoute
   '/about/our-management': typeof AboutOurManagementRoute
   '/about/vikshana': typeof AboutVikshanaRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/offers': typeof AdminOffersRoute
   '/admin/login': typeof AdminLoginRoute
   '/doctors/$slug': typeof DoctorsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -154,7 +170,9 @@ export interface FileRoutesById {
   '/shades-optical': typeof ShadesOpticalRoute
   '/about_/our-management': typeof AboutOurManagementRoute
   '/about_/vikshana': typeof AboutVikshanaRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/offers': typeof AdminOffersRoute
   '/admin_/login': typeof AdminLoginRoute
   '/doctors_/$slug': typeof DoctorsSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
@@ -174,7 +192,9 @@ export interface FileRouteTypes {
     | '/shades-optical'
     | '/about/our-management'
     | '/about/vikshana'
+    | '/admin/campaigns'
     | '/admin/doctors'
+    | '/admin/offers'
     | '/admin/login'
     | '/doctors/$slug'
     | '/services/$slug'
@@ -191,7 +211,9 @@ export interface FileRouteTypes {
     | '/shades-optical'
     | '/about/our-management'
     | '/about/vikshana'
+    | '/admin/campaigns'
     | '/admin/doctors'
+    | '/admin/offers'
     | '/admin/login'
     | '/doctors/$slug'
     | '/services/$slug'
@@ -209,7 +231,9 @@ export interface FileRouteTypes {
     | '/shades-optical'
     | '/about_/our-management'
     | '/about_/vikshana'
+    | '/admin/campaigns'
     | '/admin/doctors'
+    | '/admin/offers'
     | '/admin_/login'
     | '/doctors_/$slug'
     | '/services_/$slug'
@@ -313,11 +337,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/campaigns': {
+      id: '/admin/campaigns'
+      path: '/campaigns'
+      fullPath: '/admin/campaigns'
+      preLoaderRoute: typeof AdminCampaignsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/doctors': {
       id: '/admin/doctors'
       path: '/doctors'
       fullPath: '/admin/doctors'
       preLoaderRoute: typeof AdminDoctorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/offers': {
+      id: '/admin/offers'
+      path: '/offers'
+      fullPath: '/admin/offers'
+      preLoaderRoute: typeof AdminOffersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin_/login': {
@@ -352,12 +390,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminCampaignsRoute: typeof AdminCampaignsRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
+  AdminOffersRoute: typeof AdminOffersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCampaignsRoute: AdminCampaignsRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
+  AdminOffersRoute: AdminOffersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

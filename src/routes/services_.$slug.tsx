@@ -3,6 +3,13 @@ import { ArrowLeft, ArrowRight, Phone } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Checklist, CtaBand, SectionTitle } from "../components/site-components";
 import { contact, getService, services } from "../lib/site-data";
+const cataractFaqs = [
+  { question: "What is cataract surgery?", answer: "Cataract surgery removes the eye's cloudy natural lens and replaces it with an intraocular lens (IOL). Your ophthalmologist recommends the timing and lens option after examining your eyes and discussing how cataracts affect your daily activities." },
+  { question: "When is cataract surgery recommended?", answer: "Cataract surgery is generally considered when a cataract causes vision problems that interfere with daily activities such as reading, driving or recognising faces. The decision is individual and should follow a clinical eye examination." },
+  { question: "How is cataract surgery performed?", answer: "Modern cataract surgery commonly uses phacoemulsification, a small-incision technique that removes the cloudy lens before an intraocular lens is placed. The exact procedure and anaesthesia are decided by the ophthalmologist based on the patient's eye health." },
+  { question: "How do I find cataract surgery near me in Yelahanka?", answer: "Vikshana Eye Hospital provides cataract evaluation and surgical consultation in Yelahanka, Bengaluru. Patients can contact the hospital to discuss an appointment and whether cataract surgery is appropriate for their eyes." },
+  { question: "What happens before cataract surgery?", answer: "The pre-operative assessment may include vision testing, eye examination and measurements such as biometry to help determine the appropriate intraocular lens. Your ophthalmologist will also discuss medical history, medicines, risks, benefits and aftercare." },
+];
 
 export const Route = createFileRoute("/services_/$slug")({
   loader: ({ params }) => {
@@ -13,15 +20,28 @@ export const Route = createFileRoute("/services_/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Service not found | Vikshana Eye Hospital" }, { name: "robots", content: "noindex" }] };
     const { name, seoTitle, seoDescription, keywords } = loaderData;
+    const isCataract = name === "Cataract Surgery";
+    const canonical = isCataract ? "https://www.vikshanaeyehospital.com/services/cataract-surgery" : "https://www.vikshanaeyehospital.com/services";
+    const serviceSchema = {
+      "@context": "https://schema.org", "@type": "MedicalProcedure", name, description: seoDescription,
+      procedureType: "https://schema.org/SurgicalProcedure", bodyLocation: "Eye",
+      provider: { "@type": "MedicalClinic", name: "Vikshana Eye Hospital", telephone: contact.phone1,
+        address: { "@type": "PostalAddress", streetAddress: "#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road", addressLocality: "Yelahanka", addressRegion: "Karnataka", postalCode: "560064", addressCountry: "IN" } }
+    };
+    const faqSchema = isCataract ? {
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: cataractFaqs.map((faq) => ({ "@type": "Question", name: faq.question, acceptedAnswer: { "@type": "Answer", text: faq.answer } })),
+    } : null;
     return {
       meta: [
-        { title: seoTitle },
-        { name: "description", content: seoDescription },
-        { name: "keywords", content: keywords.join(", ") },
-        { property: "og:title", content: `${name} | Vikshana Eye Hospital` },
-        { property: "og:description", content: seoDescription },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
+        { title: seoTitle }, { name: "description", content: seoDescription }, { name: "keywords", content: keywords.join(", ") },
+        { property: "og:title", content: `${name} | Vikshana Eye Hospital` }, { property: "og:description", content: seoDescription },
+        { property: "og:type", content: "article" }, { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [{ rel: "canonical", href: canonical }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(serviceSchema) },
+        ...(faqSchema ? [{ type: "application/ld+json", children: JSON.stringify(faqSchema) }] : []),
       ],
     };
   },
@@ -70,6 +90,22 @@ function ServiceDetail() {
         </div>
       </section>
 
+      {slug === "cataract-surgery" && (
+        <section className="section-pad bg-background">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <SectionTitle eyebrow="Cataract care questions" title="Cataract Surgery: Common Questions" text="Straightforward answers to common questions patients ask before a cataract consultation." />
+            <div className="mt-10 space-y-4">
+              {cataractFaqs.map((faq) => (
+                <details key={faq.question} className="rounded-lg border border-border bg-muted/40 p-5">
+                  <summary className="cursor-pointer font-bold text-brand-deep">{faq.question}</summary>
+                  <p className="mt-3 leading-7 text-muted-foreground">{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+            <p className="mt-6 text-xs leading-6 text-muted-foreground">Information on this page is for general education and does not replace an examination or personalised advice from an ophthalmologist.</p>
+          </div>
+        </section>
+      )}
       <section className="section-pad bg-muted">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <SectionTitle eyebrow="Related care" title="Other services you may need"/>

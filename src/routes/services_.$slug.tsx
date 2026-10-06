@@ -15,13 +15,13 @@ export const Route = createFileRoute("/services_/$slug")({
   loader: ({ params }) => {
     const service = getService(params.slug);
     if (!service) throw notFound();
-    return { name: service.name, seoTitle: service.seoTitle, seoDescription: service.seoDescription, keywords: service.keywords };
+    return { slug: service.slug, name: service.name, seoTitle: service.seoTitle, seoDescription: service.seoDescription, keywords: service.keywords };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Service not found | Vikshana Eye Hospital" }, { name: "robots", content: "noindex" }] };
-    const { name, seoTitle, seoDescription, keywords } = loaderData;
+    const { slug, name, seoTitle, seoDescription, keywords } = loaderData;
     const isCataract = name === "Cataract Surgery";
-    const canonical = isCataract ? "https://www.vikshanaeyehospital.com/services/cataract-surgery" : "https://www.vikshanaeyehospital.com/services";
+    const canonical = `https://www.vikshanaeyehospital.com/services/${slug}`;
     const serviceSchema = {
       "@context": "https://schema.org", "@type": "MedicalProcedure", name, description: seoDescription,
       procedureType: "https://schema.org/SurgicalProcedure", bodyLocation: "Eye",

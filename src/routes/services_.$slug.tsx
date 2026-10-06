@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Phone } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Checklist, CtaBand, SectionTitle } from "../components/site-components";
 import { contact, getService, services } from "../lib/site-data";
+
 const cataractFaqs = [
   { question: "What is cataract surgery?", answer: "Cataract surgery removes the eye's cloudy natural lens and replaces it with an intraocular lens (IOL). Your ophthalmologist recommends the timing and lens option after examining your eyes and discussing how cataracts affect your daily activities." },
   { question: "When is cataract surgery recommended?", answer: "Cataract surgery is generally considered when a cataract causes vision problems that interfere with daily activities such as reading, driving or recognising faces. The decision is individual and should follow a clinical eye examination." },
@@ -10,6 +11,21 @@ const cataractFaqs = [
   { question: "How do I find cataract surgery near me in Yelahanka?", answer: "Vikshana Eye Hospital provides cataract evaluation and surgical consultation in Yelahanka, Bengaluru. Patients can contact the hospital to discuss an appointment and whether cataract surgery is appropriate for their eyes." },
   { question: "What happens before cataract surgery?", answer: "The pre-operative assessment may include vision testing, eye examination and measurements such as biometry to help determine the appropriate intraocular lens. Your ophthalmologist will also discuss medical history, medicines, risks, benefits and aftercare." },
 ];
+
+const seoKeywordBoosts: Record<string, string[]> = {
+  "ocular-surface-procedures": ["Dry Eye Treatment Near Me", "Dry Eye Specialist Near Me", "Dry Eye Clinic Near Me", "Dry Eyes Treatment", "Watery Eyes Treatment", "Eye Irritation Treatment", "Blepharitis Treatment"],
+  "foreign-body-removal": ["Eye Foreign Body Removal Near Me", "Foreign Object in Eye", "Emergency Eye Care Near Me", "Eye Injury Treatment Near Me", "Dust in Eye Removal", "Metal in Eye Removal"],
+  "cataract-evaluation": ["Cataract Checkup Near Me", "Cataract Evaluation Near Me", "Cataract Specialist Near Me", "Cataract Doctor Near Me", "Cataract Consultation Near Me", "Cataract Screening"],
+  "pediatric-ophthalmology": ["Children's Eye Doctor Near Me", "Pediatric Eye Specialist Near Me", "Kids Eye Doctor Near Me", "Children's Eye Checkup Near Me", "Child Eye Specialist", "Lazy Eye Treatment", "Squint in Children"],
+  "anterior-segment-evaluation": ["Cornea Specialist Near Me", "Cornea Doctor Near Me", "Corneal Examination Near Me", "Corneal Disease Specialist", "Anterior Eye Examination", "Pterygium Evaluation", "Keratoconus Evaluation"],
+  "posterior-segment-evaluation": ["Retina Specialist Near Me", "Retina Doctor Near Me", "Retina Hospital Near Me", "Diabetic Eye Checkup Near Me", "Diabetic Retinopathy Screening", "Fundus Examination Near Me", "Retinal Disease Specialist"],
+  "refraction": ["Eye Test Near Me", "Eye Checkup Near Me", "Eye Power Check Near Me", "Eye Power Test", "Vision Test Near Me", "Glasses Prescription", "Spectacle Power Check", "Optometrist Near Me"],
+  "cataract-surgery": ["Cataract Surgery Near Me", "Cataract Operation Near Me", "Cataract Treatment Near Me", "Cataract Surgeon Near Me", "Cataract Hospital Near Me", "Eye Hospital for Cataract"],
+  "squint-evaluation": ["Squint Specialist Near Me", "Squint Treatment Near Me", "Squint Eye Doctor", "Strabismus Specialist", "Squint Treatment for Children"],
+  "red-eye": ["Red Eye Treatment Near Me", "Redness in Eye Treatment", "Eye Allergy Treatment Near Me", "Eye Infection Checkup", "Red Eye Specialist"],
+  "dry-eye": ["Dry Eye Treatment Near Me", "Dry Eye Specialist Near Me", "Dry Eye Doctor Near Me", "Dry Eye Clinic", "Burning Eyes Treatment", "Watery Eyes Treatment"],
+  "eye-pressure-check": ["Eye Pressure Test Near Me", "Eye Pressure Check Near Me", "Glaucoma Screening Near Me", "Glaucoma Test Near Me", "Glaucoma Specialist Near Me", "Glaucoma Doctor Near Me"],
+};
 
 export const Route = createFileRoute("/services_/$slug")({
   loader: ({ params }) => {
@@ -21,12 +37,22 @@ export const Route = createFileRoute("/services_/$slug")({
     if (!loaderData) return { meta: [{ title: "Service not found | Vikshana Eye Hospital" }, { name: "robots", content: "noindex" }] };
     const { slug, name, seoTitle, seoDescription, keywords } = loaderData;
     const isCataract = name === "Cataract Surgery";
+    const expandedKeywords = Array.from(new Set([...keywords, ...(seoKeywordBoosts[slug] ?? []), "Vikshana Eye Hospital", "Yelahanka Eye Hospital", "Eye Hospital Yelahanka", "Eye Hospital Bengaluru"]));
     const canonical = `https://www.vikshanaeyehospital.com/services/${slug}`;
     const serviceSchema = {
-      "@context": "https://schema.org", "@type": "MedicalProcedure", name, description: seoDescription,
-      procedureType: "https://schema.org/SurgicalProcedure", bodyLocation: "Eye",
-      provider: { "@type": "MedicalClinic", name: "Vikshana Eye Hospital", telephone: contact.phone1,
-        address: { "@type": "PostalAddress", streetAddress: "#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road", addressLocality: "Yelahanka", addressRegion: "Karnataka", postalCode: "560064", addressCountry: "IN" } }
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      name,
+      description: seoDescription,
+      url: canonical,
+      bodyLocation: "Eye",
+      provider: {
+        "@type": "MedicalClinic",
+        name: "Vikshana Eye Hospital",
+        telephone: contact.phone1,
+        areaServed: ["Yelahanka", "Bengaluru", "Karnataka"],
+        address: { "@type": "PostalAddress", streetAddress: "#63/2, Shree Sai Layout, Singanayakanahalli, Doddaballapur Main Road", addressLocality: "Yelahanka", addressRegion: "Karnataka", postalCode: "560064", addressCountry: "IN" },
+      },
     };
     const faqSchema = isCataract ? {
       "@context": "https://schema.org", "@type": "FAQPage",
@@ -34,9 +60,14 @@ export const Route = createFileRoute("/services_/$slug")({
     } : null;
     return {
       meta: [
-        { title: seoTitle }, { name: "description", content: seoDescription }, { name: "keywords", content: keywords.join(", ") },
-        { property: "og:title", content: `${name} | Vikshana Eye Hospital` }, { property: "og:description", content: seoDescription },
-        { property: "og:type", content: "article" }, { name: "twitter:card", content: "summary_large_image" },
+        { title: seoTitle },
+        { name: "description", content: seoDescription },
+        { name: "keywords", content: expandedKeywords.join(", ") },
+        { name: "robots", content: "index, follow" },
+        { property: "og:title", content: `${name} | Vikshana Eye Hospital` },
+        { property: "og:description", content: seoDescription },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: canonical }],
       scripts: [
